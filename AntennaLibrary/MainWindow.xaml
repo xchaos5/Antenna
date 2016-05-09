@@ -5,8 +5,161 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AntennaLibrary"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="960" Width="1280">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TabControl Grid.Column="0" TabStripPlacement="Top" Margin="16" SelectionChanged="Selector_OnSelectionChanged">
+            <TabItem Header="Content" x:Name="tabContent">
+                <TreeView x:Name="directoryTreeView" Width="300" BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Left" SelectedItemChanged="DirectoryTreeView_OnSelectedItemChanged">
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type local:DirectoryRecord}" ItemsSource="{Binding Files}">
+                            <StackPanel Orientation="Horizontal">
+                                <!--<Image Source="Images/folder.png" Width="16" Height="16"/>-->
+                                <TextBlock Text="{Binding Info.Name}"/>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}">
+                            <Setter Property="IsExpanded" Value="True" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                </TreeView>
+            </TabItem>
+            <TabItem Header="Design" x:Name="tabDesign">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+                            <Label Grid.Row="0" Content="Number of bands:" Width="108" Height="26" Margin="10,10,0,10" VerticalAlignment="Bottom"/>
+                            <TextBox Grid.Row="1" x:Name="tbNumOfBands" Text="{Binding Path=Query.NumOfBands, Mode=TwoWay}"  Width="100" Height="20" TextChanged="TbNumOfBands_OnTextChanged" />
+                        </StackPanel>
+                        <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1" Grid.Row="0" Grid.Column="0"></Border>
+                        <ItemsControl Grid.Row="1" x:Name="Bands" ItemsSource="{Binding Path=Query.BandRanges}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="10">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Row="0" Grid.RowSpan="2" Margin="20,10,0,10">
+                                            <Label.Content>
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="Band {0}">
+                                                            <Binding Path="No"></Binding>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </Label.Content>
+                                        </Label>
+                                        <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,0,10">from:</Label>
+                                        <TextBox Grid.Row="0" Grid.Column="2" Width="50" Height="20" Text="{Binding From}"></TextBox>
+                                        <ComboBox Grid.Row="0" Grid.Column="3" Margin="0,0,42,0" HorizontalAlignment="Left" Width="50" Height="20">
+                                            <ComboBoxItem IsSelected="True">Hz</ComboBoxItem>
+                                            <ComboBoxItem>KHz</ComboBoxItem>
+                                            <ComboBoxItem>MHz</ComboBoxItem>
+                                            <ComboBoxItem>GHz</ComboBoxItem>
+                                        </ComboBox>
+                                        <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,0,10">to:</Label>
+                                        <TextBox Grid.Row="1" Grid.Column="2" Width="50" Height="20" Text="{Binding To}"></TextBox>
+                                        <ComboBox Grid.Row="1" Grid.Column="3" HorizontalAlignment="Left" Width="50" Height="20">
+                                            <ComboBoxItem IsSelected="True">Hz</ComboBoxItem>
+                                            <ComboBoxItem>KHz</ComboBoxItem>
+                                            <ComboBoxItem>MHz</ComboBoxItem>
+                                            <ComboBoxItem>GHz</ComboBoxItem>
+                                        </ComboBox>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+
+                        </ItemsControl>
+
+                        <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1" Grid.Row="1" Grid.Column="0"></Border>
+                        <Grid Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="105"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Margin="30,10,0,10">Gain</Label>
+                            <TextBox Grid.Row="0" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
+                            <ComboBox Grid.Row="0" Grid.Column="2" HorizontalAlignment=" Left" Width="50" Height="20">
+                                <ComboBoxItem IsSelected="True">dBi</ComboBoxItem>
+                                <ComboBoxItem>dBd</ComboBoxItem>
+                            </ComboBox>
+                            <Label Grid.Row="1" Grid.Column="0" Margin="30,10,0,10">3dB width</Label>
+                            <TextBox Grid.Row="1" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
+                            <Label Grid.Row="1" Grid.Column="2" Margin="0,10,0,10">°</Label>
+                            <Label Grid.Row="2" Grid.Column="0" Margin="30,10,0,10">VSWR &lt;</Label>
+                            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
+                            <Label Grid.Row="3" Grid.Column="0" Margin="30,10,0,10">Efficiency &gt;</Label>
+                            <TextBox Grid.Row="3" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
+                            <Label Grid.Row="3" Grid.Column="2" Margin="0,10,0,10">%</Label>
+                            <Label Grid.Row="4" Grid.Column="0" Margin="30,10,0,10">Polarization</Label>
+                            <RadioButton Grid.Row="5" Grid.Column="0" Margin="30,10,0,10" x:Name="rbSingle" IsChecked="True">Single</RadioButton>
+                            <RadioButton Grid.Row="5" Grid.Column="1" Margin="0,10,0,10" x:Name="rbDual">Dual</RadioButton>
+                            <RadioButton Grid.Row="6" Grid.Column="0" Margin="30,10,0,10" x:Name="rbLinear">Linear</RadioButton>
+                            <RadioButton Grid.Row="6" Grid.Column="1" Margin="0,10,0,10" x:Name="rbCircular" Checked="rbCircular_Checked" Unchecked="rbCircular_Unchecked">Circular</RadioButton>
+                            <Label Grid.Row="7" Grid.Column="0" Margin="30,10,0,10">Axial Ratio</Label>
+                            <TextBox Grid.Row="7" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
+                            <Label Grid.Row="8" Grid.Column="0" Margin="0,10,0,10" x:Name="lblCross" Visibility="Collapsed">Cross Polarization</Label>
+                            <TextBox Grid.Row="8" Grid.Column="1" Width="75" Height="20" x:Name="tbCross" Visibility="Collapsed" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
+                            <Button Grid.Row="9" Grid.Column="2" x:Name="btnFind" Margin="0,10,0,10">Find</Button>
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+        <WrapPanel Grid.Column="1" x:Name="wrapPanel" Orientation="Horizontal" ItemWidth="300" ItemHeight="200">
+            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
+                <Image Source="Antennas/Images/卡塞格伦天线.png"></Image>
+            </Border>
+            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
+                <Image Source="Antennas/Images/双极化四脊锥形喇叭天线.png"></Image>
+            </Border>
+            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
+                <Image Source="Antennas/Images/宽带定向偶极子.png"></Image>
+            </Border>
+            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
+                <Image Source="Antennas/Images/微带缝隙耦合贴片天线.png"></Image>
+            </Border>
+            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
+                <Image Source="Antennas/Images/杆状偶极子天线.png"></Image>
+            </Border>
+            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
+                <Image Source="Antennas/Images/横向槽圆锥波纹喇叭天线.png"></Image>
+            </Border>
+            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
+                <Image Source="Antennas/Images/角锥喇叭天线.png"></Image>
+            </Border>
+        </WrapPanel>
+        <DocumentViewer Grid.Column="1" x:Name="documentViewer"></DocumentViewer>
     </Grid>
 </Window>
