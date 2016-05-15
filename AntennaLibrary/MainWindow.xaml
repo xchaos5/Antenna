@@ -5,15 +5,90 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AntennaLibrary"
         mc:Ignorable="d"
-        Title="MainWindow" Height="960" Width="1280">
+        Title="Antenna Library" Height="960" Width="1280" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <local:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
+        <Style TargetType="Button">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Image" x:Key="ClickableImage">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"></Setter>
+                    <Setter Property="Opacity" Value="0.5"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button" x:Key="Grayed">
+            <Setter Property="Opacity" Value="1.0"></Setter>
+
+        </Style>
+        <Style TargetType="FrameworkElement" x:Key="FadeIn">
+            <Style.Triggers>
+                <Trigger Property="Visibility" Value="Visible">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="0.0" To="1.0" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="ToggleButton">
+            <Setter Property="Background" Value="#FFFFFFFF"/>
+            <Setter Property="Foreground" Value="#FF000000"/>
+            <Setter Property="Padding" Value="3"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush">
+                <Setter.Value>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                        <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                        <GradientStop Color="#FF718597" Offset="0.375"/>
+                        <GradientStop Color="#FF617584" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border CornerRadius="10" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Background" Value="Yellow"></Setter>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TabControl Grid.Column="0" TabStripPlacement="Top" Margin="16" SelectionChanged="Selector_OnSelectionChanged">
-            <TabItem Header="Content" x:Name="tabContent">
-                <TreeView x:Name="directoryTreeView" Width="300" BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Left" SelectedItemChanged="DirectoryTreeView_OnSelectedItemChanged">
+        <TabControl Grid.Column="0" TabStripPlacement="Top" Margin="16" SelectionChanged="TabItemHeader_OnClick">
+            <TabItem x:Name="TabContent">
+                <TabItem.HeaderTemplate>
+                    <ItemContainerTemplate>
+                        <TextBlock Cursor="Hand" MouseDown="TabItemHeader_OnClick">Content</TextBlock>
+                    </ItemContainerTemplate>
+                </TabItem.HeaderTemplate>
+                <TreeView x:Name="AntennasTreeView" Width="300" BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Left" SelectedItemChanged="DirectoryTreeView_OnSelectedItemChanged">
                     <TreeView.Resources>
                         <HierarchicalDataTemplate DataType="{x:Type local:DirectoryRecord}" ItemsSource="{Binding Files}">
                             <StackPanel Orientation="Horizontal">
@@ -29,7 +104,12 @@
                     </TreeView.ItemContainerStyle>
                 </TreeView>
             </TabItem>
-            <TabItem Header="Design" x:Name="tabDesign">
+            <TabItem x:Name="TabDesign">
+                <TabItem.HeaderTemplate>
+                    <ItemContainerTemplate>
+                        <TextBlock Cursor="Hand" MouseDown="TabItemHeader_OnClick">Design</TextBlock>
+                    </ItemContainerTemplate>
+                </TabItem.HeaderTemplate>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -39,10 +119,10 @@
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
                             <Label Grid.Row="0" Content="Number of bands:" Width="108" Height="26" Margin="10,10,0,10" VerticalAlignment="Bottom"/>
-                            <TextBox Grid.Row="1" x:Name="tbNumOfBands" Text="{Binding Path=Query.NumOfBands, Mode=TwoWay}"  Width="100" Height="20" TextChanged="TbNumOfBands_OnTextChanged" />
+                            <TextBox Grid.Row="1" x:Name="tbNumOfBands" Text="{Binding Path=BandRanges.NumOfBands, Mode=TwoWay}"  Width="100" Height="20" TextChanged="TbNumOfBands_OnTextChanged" />
                         </StackPanel>
                         <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1" Grid.Row="0" Grid.Column="0"></Border>
-                        <ItemsControl Grid.Row="1" x:Name="Bands" ItemsSource="{Binding Path=Query.BandRanges}">
+                        <ItemsControl Grid.Row="1" x:Name="Bands" ItemsSource="{Binding Path=BandRanges.BandRanges}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="10">
@@ -68,25 +148,24 @@
                                             </Label.Content>
                                         </Label>
                                         <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,0,10">from:</Label>
-                                        <TextBox Grid.Row="0" Grid.Column="2" Width="50" Height="20" Text="{Binding From}"></TextBox>
-                                        <ComboBox Grid.Row="0" Grid.Column="3" Margin="0,0,42,0" HorizontalAlignment="Left" Width="50" Height="20">
-                                            <ComboBoxItem IsSelected="True">Hz</ComboBoxItem>
+                                        <TextBox Grid.Row="0" Grid.Column="2" Width="50" Height="20" Text="{Binding Path=LowerBound.Value}"></TextBox>
+                                        <ComboBox Grid.Row="0" Grid.Column="3" Margin="0,0,42,0" HorizontalAlignment="Left" Width="52" Height="20">
+                                            <ComboBoxItem>Hz</ComboBoxItem>
                                             <ComboBoxItem>KHz</ComboBoxItem>
-                                            <ComboBoxItem>MHz</ComboBoxItem>
+                                            <ComboBoxItem IsSelected="True">MHz</ComboBoxItem>
                                             <ComboBoxItem>GHz</ComboBoxItem>
                                         </ComboBox>
                                         <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,0,10">to:</Label>
-                                        <TextBox Grid.Row="1" Grid.Column="2" Width="50" Height="20" Text="{Binding To}"></TextBox>
-                                        <ComboBox Grid.Row="1" Grid.Column="3" HorizontalAlignment="Left" Width="50" Height="20">
-                                            <ComboBoxItem IsSelected="True">Hz</ComboBoxItem>
+                                        <TextBox Grid.Row="1" Grid.Column="2" Width="50" Height="20" Text="{Binding Path=UpperBound.Value}"></TextBox>
+                                        <ComboBox Grid.Row="1" Grid.Column="3" HorizontalAlignment="Left" Width="52" Height="20">
+                                            <ComboBoxItem>Hz</ComboBoxItem>
                                             <ComboBoxItem>KHz</ComboBoxItem>
-                                            <ComboBoxItem>MHz</ComboBoxItem>
+                                            <ComboBoxItem IsSelected="True">MHz</ComboBoxItem>
                                             <ComboBoxItem>GHz</ComboBoxItem>
                                         </ComboBox>
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
-
                         </ItemsControl>
 
                         <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1" Grid.Row="1" Grid.Column="0"></Border>
@@ -110,7 +189,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" Margin="30,10,0,10">Gain</Label>
                             <TextBox Grid.Row="0" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
-                            <ComboBox Grid.Row="0" Grid.Column="2" HorizontalAlignment=" Left" Width="50" Height="20">
+                            <ComboBox Grid.Row="0" Grid.Column="2" HorizontalAlignment=" Left" Width="52" Height="20">
                                 <ComboBoxItem IsSelected="True">dBi</ComboBoxItem>
                                 <ComboBoxItem>dBd</ComboBoxItem>
                             </ComboBox>
@@ -123,43 +202,108 @@
                             <TextBox Grid.Row="3" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
                             <Label Grid.Row="3" Grid.Column="2" Margin="0,10,0,10">%</Label>
                             <Label Grid.Row="4" Grid.Column="0" Margin="30,10,0,10">Polarization</Label>
-                            <RadioButton Grid.Row="5" Grid.Column="0" Margin="30,10,0,10" x:Name="rbSingle" IsChecked="True">Single</RadioButton>
-                            <RadioButton Grid.Row="5" Grid.Column="1" Margin="0,10,0,10" x:Name="rbDual">Dual</RadioButton>
-                            <RadioButton Grid.Row="6" Grid.Column="0" Margin="30,10,0,10" x:Name="rbLinear">Linear</RadioButton>
-                            <RadioButton Grid.Row="6" Grid.Column="1" Margin="0,10,0,10" x:Name="rbCircular" Checked="rbCircular_Checked" Unchecked="rbCircular_Unchecked">Circular</RadioButton>
+                            <RadioButton Grid.Row="5" Grid.Column="0" Margin="30,10,0,10" x:Name="RbSingle" IsChecked="True">Single</RadioButton>
+                            <RadioButton Grid.Row="5" Grid.Column="1" Margin="0,10,0,10" x:Name="RbDual">Dual</RadioButton>
+                            <RadioButton Grid.Row="6" Grid.Column="0" Margin="30,10,0,10" x:Name="RbLinear">Linear</RadioButton>
+                            <RadioButton Grid.Row="6" Grid.Column="1" Margin="0,10,0,10" x:Name="RbCircular">Circular</RadioButton>
                             <Label Grid.Row="7" Grid.Column="0" Margin="30,10,0,10">Axial Ratio</Label>
                             <TextBox Grid.Row="7" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
-                            <Label Grid.Row="8" Grid.Column="0" Margin="0,10,0,10" x:Name="lblCross" Visibility="Collapsed">Cross Polarization</Label>
-                            <TextBox Grid.Row="8" Grid.Column="1" Width="75" Height="20" x:Name="tbCross" Visibility="Collapsed" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
-                            <Button Grid.Row="9" Grid.Column="2" x:Name="btnFind" Margin="0,10,0,10">Find</Button>
+                            <Label Grid.Row="8" Grid.Column="0" Margin="0,10,0,10" x:Name="lblCross" Visibility="{Binding ElementName=RbCircular, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">Cross Polarization</Label>
+                            <TextBox Grid.Row="8" Grid.Column="1" Width="75" Height="20" x:Name="tbCross" Visibility="{Binding ElementName=RbCircular, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
+                            <Button Grid.Row="9" Grid.Column="2" x:Name="BtnFind" Margin="0,10,0,10" Click="BtnFind_OnClick">Find</Button>
                         </Grid>
                     </Grid>
                 </ScrollViewer>
             </TabItem>
         </TabControl>
-        <WrapPanel Grid.Column="1" x:Name="wrapPanel" Orientation="Horizontal" ItemWidth="300" ItemHeight="200">
-            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
-                <Image Source="Antennas/Images/卡塞格伦天线.png"></Image>
-            </Border>
-            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
-                <Image Source="Antennas/Images/双极化四脊锥形喇叭天线.png"></Image>
-            </Border>
-            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
-                <Image Source="Antennas/Images/宽带定向偶极子.png"></Image>
-            </Border>
-            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
-                <Image Source="Antennas/Images/微带缝隙耦合贴片天线.png"></Image>
-            </Border>
-            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
-                <Image Source="Antennas/Images/杆状偶极子天线.png"></Image>
-            </Border>
-            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
-                <Image Source="Antennas/Images/横向槽圆锥波纹喇叭天线.png"></Image>
-            </Border>
-            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
-                <Image Source="Antennas/Images/角锥喇叭天线.png"></Image>
-            </Border>
-        </WrapPanel>
-        <DocumentViewer Grid.Column="1" x:Name="documentViewer"></DocumentViewer>
+
+        <StackPanel Grid.Column="1" Orientation="Vertical" x:Name="AntennasViewer" Style="{StaticResource FadeIn}">
+            <Grid Background="LightGray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="50"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Margin="2" VerticalAlignment="Center">Tags</Label>
+                <ItemsControl Grid.Column="1" x:Name="TagsPanel" Width="Auto">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" ItemHeight="30"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ToggleButton Padding="2,0,2,0" Margin="0,2,0,2" IsChecked="{Binding Path=IsChecked, Mode=TwoWay}">
+                                <TextBlock Text="{Binding Path=Name}" Margin="8,0,8,0"></TextBlock>
+                            </ToggleButton>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Grid.Column="2" Background="Transparent" BorderThickness="0" Width="15" Height="15" Click="ButtonBase_OnClick">
+                    <Path Data="M0,0 L1,1 M0,1 L1,0" Stretch="Uniform" StrokeThickness="2" Stroke="DarkRed" />
+                </Button>
+            </Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="AntennasPanel">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" ItemWidth="320" ItemHeight="240" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
+                                <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=Antenna.ImagePath}" Opacity="{Binding Path=IsSelected, Converter={StaticResource BoolToOpacityConverter}}" MouseDown="UIElement_OnMouseDown"></Image>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
+        <DocumentViewer Grid.Column="1" x:Name="DocumentViewer" Style="{StaticResource FadeIn}"></DocumentViewer>
+        <Grid Grid.Column="1" x:Name="QueryResultViewer" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <TextBlock FontWeight="Bold" Margin="20,20,20,0">Best Match</TextBlock>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Border BorderBrush="DarkCyan" Grid.Column="0" BorderThickness="2" Margin="20,10,20,10">
+                        <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=Antenna.ImagePath}" Width="320" Height="240"></Image>
+                    </Border>
+                    <Grid Grid.Column="1" Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Row="0" Grid.Column="0">Gain:</TextBlock>
+                        <TextBlock Grid.Row="1" Grid.Column="0">3dB Width:</TextBlock>
+                        <TextBlock Grid.Row="2" Grid.Column="0">VSWR:</TextBlock>
+                        <TextBlock Grid.Row="3" Grid.Column="0">Cross Polarization:</TextBlock>
+                        <TextBlock Grid.Row="4" Grid.Column="0">Axial Ratio:</TextBlock>
+
+                        <TextBlock Grid.Row="0" Grid.Column="1"></TextBlock>
+                        <TextBlock Grid.Row="1" Grid.Column="1"></TextBlock>
+                        <TextBlock Grid.Row="2" Grid.Column="1"></TextBlock>
+                        <TextBlock Grid.Row="3" Grid.Column="1"></TextBlock>
+                        <TextBlock Grid.Row="4" Grid.Column="1"></TextBlock>
+                    </Grid>
+                </Grid>
+            </StackPanel>
+            <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1" Grid.Row="0"></Border>
+        </Grid>
     </Grid>
 </Window>

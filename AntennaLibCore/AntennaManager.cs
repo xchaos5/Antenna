@@ -8,37 +8,50 @@ namespace AntennaLibCore
 {
     public class AntennaManager
     {
-        private Dictionary<string, Antenna> _antennas;
+        private Dictionary<string, Antenna> _antennas = new Dictionary<string, Antenna>();
 
-        public bool AddAntenna(string name, Antenna antenna)
+        public IEnumerable<Antenna> Antennas => _antennas.Values;
+
+        public IEnumerable<string> Tags
         {
-            if (!_antennas.ContainsKey(name))
+            get
             {
-                _antennas.Add(name, antenna);
+                return _antennas.Values.SelectMany(x => x.Tags).Distinct();
+            }
+        } 
+
+        public bool AddAntenna(Antenna antenna)
+        {
+            if (!_antennas.ContainsKey(antenna.Name))
+            {
+                _antennas.Add(antenna.Name, antenna);
                 return true;
             }
             return false;
         }
 
-        public bool RemoveAntenna(string name)
+        public bool RemoveAntenna(string antennaName)
         {
-            if (_antennas.ContainsKey(name))
+            if (_antennas.ContainsKey(antennaName))
             {
-                _antennas.Remove(name);
+                _antennas.Remove(antennaName);
                 return true;
             }
             return false;
         }
 
-        public Antenna GetAntennaByName(string name)
+        public Antenna GetAntenna(string antennaName)
         {
-            if (_antennas.ContainsKey(name))
+            if (_antennas.ContainsKey(antennaName))
             {
-                return _antennas[name];
+                return _antennas[antennaName];
             }
             return null;
         }
 
-
+        public IEnumerable<Antenna> ExecuteAntennaQuery(AntennaQuery query)
+        {
+            return _antennas.Values.Where(antenna => antenna.Match(query).IsMatch).ToList();
+        }
     }
 }
