@@ -60,19 +60,19 @@ namespace AntennaLibCore
             }
         }
 
-        public static IList<KeyValuePair<int, Tuple<double, double>>> LoadThetaGainMapFromFile(string fileName)
+        public static IList<KeyValuePair<double, Tuple<double, double>>> LoadThetaGainMapFromFile(string fileName)
         {
-            var thetaGainMap = new List<KeyValuePair<int, Tuple<double, double>>>();
+            var thetaGainMap = new List<KeyValuePair<double, Tuple<double, double>>>();
             using (var reader = new StreamReader(fileName))
             {
                 string line = reader.ReadLine();    // skip first line
                 while (null != (line = reader.ReadLine()))
                 {
                     var vals = line.Split(',');
-                    int theta = int.Parse(vals[0]);
+                    double theta = double.Parse(vals[0]);
                     double phi0Gain = double.Parse(vals[1]);
                     double phi90Gain = double.Parse(vals[2]);
-                    thetaGainMap.Add(new KeyValuePair<int, Tuple<double, double>>(theta, new Tuple<double, double>(phi0Gain, phi90Gain)));
+                    thetaGainMap.Add(new KeyValuePair<double, Tuple<double, double>>(theta, new Tuple<double, double>(phi0Gain, phi90Gain)));
                 }
             }
             return thetaGainMap;
@@ -141,11 +141,11 @@ namespace AntennaLibCore
                         antenna.ThetaGainMaps.OrderBy(x => x.Freq.NormalizedFreq);
                     }
 
-                    if (antennaElement.Descendants("CrossPolarization").Any())
+                    if (antennaElement.Descendants("CrossPolarizationMap").Any())
                     {
-                        var crossPolarization = new CrossPolarization();
-                        crossPolarization.LoadFromFile(antennaElement.Element("CrossPolarization").Value);
-                        antenna.CrossPolarization = crossPolarization;
+                        var crossPolarization = new CrossPolarizationMap();
+                        crossPolarization.LoadFromFile(antennaElement.Element("CrossPolarizationMap").Value);
+                        antenna.CrossPolarizationMap = crossPolarization;
                     }
 
                     if (antennaElement.Descendants("FreqGainMap").Any())
@@ -153,9 +153,14 @@ namespace AntennaLibCore
                         antenna.FreqGainMap = LoadFreqGainMapFromFile(antennaElement.Element("FreqGainMap").Value);
                     }
 
-                    if (antennaElement.Descendants("VSWR").Any())
+                    if (antennaElement.Descendants("VSWRMap").Any())
                     {
-                        antenna.VSWR = LoadFreqGainMapFromFile(antennaElement.Element("VSWR").Value);
+                        antenna.VSWRMap = LoadFreqGainMapFromFile(antennaElement.Element("VSWRMap").Value);
+                    }
+
+                    if (antennaElement.Descendants("DimensionsImage").Any())
+                    {
+                        antenna.DimensionsImagePath = antennaElement.Element("DimensionsImage").Value;
                     }
 
                     if (antennaElement.Descendants("Dimension").Any())

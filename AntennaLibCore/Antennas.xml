@@ -2,8 +2,9 @@
 <Antennas>
 	<Antenna>
 		<Name>Cassegrain</Name>
-		<Document>Antennas/卡塞格伦天线.xps</Document>
-		<Image>Antennas/Images/卡塞格伦天线.png</Image>
+		<Document>Antennas/Cassegrain.xps</Document>
+		<Image>Antennas/Images/Cassegrain.png</Image>
+		<DimensionsImage>Antennas/Images/Cassegrain_Dimensions.png</DimensionsImage>
 		<MinFreq>8</MinFreq>
 		<MinFreqUnit>GHz</MinFreqUnit>
 		<MaxFreq>120</MaxFreq>
@@ -13,12 +14,12 @@
 			<ThetaGainMap>
 				<Freq>10</Freq>
 				<FreqUnit>GHz</FreqUnit>
-				<FilePath>Antennas\Circular Corrugated Horn\Gain_Theta.csv</FilePath>
+				<FilePath>Antennas\Cassegrain\farfield_X.csv</FilePath>
 			</ThetaGainMap>
 			<ThetaGainMap>
 				<Freq>35</Freq>
 				<FreqUnit>GHz</FreqUnit>
-				<FilePath>Antennas\Circular Corrugated Horn\Gain_Theta.csv</FilePath>
+				<FilePath>Antennas\Cassegrain\farfield_Ka.csv</FilePath>
 			</ThetaGainMap>
 		</ThetaGainMaps>
 		<Dimensions>
@@ -90,8 +91,9 @@
 	</Antenna>
 	<Antenna>
 		<Name>Double Ridged Horn</Name>
-		<Document>Antennas/双极化四脊锥形喇叭天线.xps</Document>
-		<Image>Antennas/Images/双极化四脊锥形喇叭天线.png</Image>
+		<Document>Antennas/Double Ridged Horn.xps</Document>
+		<Image>Antennas/Images/Double Ridged Horn.png</Image>
+		<DimensionsImage>Antennas/Images/Double_Ridged_Horn_Dimensions.png</DimensionsImage>
 		<MinFreq>1</MinFreq>
 		<MinFreqUnit>GHz</MinFreqUnit>
 		<MaxFreq>40</MaxFreq>
@@ -99,11 +101,13 @@
 		<Tags>horn,linear polarization,directional,UWB,single band</Tags>
 		<ThetaGainMaps>
 			<ThetaGainMap>
-				<Freq>40</Freq>
+				<Freq>20</Freq>
 				<FreqUnit>GHz</FreqUnit>
-				<FilePath>Antennas\Circular Corrugated Horn\Gain_Theta.csv</FilePath>
+				<FilePath>Antennas\Double Ridged Horn\E_H.csv</FilePath>
 			</ThetaGainMap>
 		</ThetaGainMaps>
+		<FreqGainMap>Antennas\Double Ridged Horn\Gain_Freq.csv</FreqGainMap>
+		<CrossPolarizationMap>Antennas\Double Ridged Horn\E_X.csv</CrossPolarizationMap>
 		<Dimensions>
 			<Dimension>
 				<Name>SQTH_waveguide_length</Name>
@@ -149,8 +153,9 @@
 	</Antenna>
 	<Antenna>
 		<Name>Aperture Coupled Patch</Name>
-		<Document>Antennas/微带缝隙耦合贴片天线.xps</Document>
-		<Image>Antennas/Images/微带缝隙耦合贴片天线.png</Image>
+		<Document>Antennas/Aperture Coupled Patch.xps</Document>
+		<Image>Antennas/Images/Aperture Coupled Patch.png</Image>
+		<DimensionsImage>Antennas/Images/Aperture_Coupled_Patch_Dimensions.png</DimensionsImage>
 		<MinFreq>320</MinFreq>
 		<MinFreqUnit>MHz</MinFreqUnit>
 		<MaxFreq>22</MaxFreq>
@@ -164,8 +169,8 @@
 			</ThetaGainMap>
 		</ThetaGainMaps>
 		<FreqGainMap>Antennas\Aperture Coupled Patch\Gain_Freq.csv</FreqGainMap>
-		<VSWR>Antennas\Aperture Coupled Patch\VSWR.csv</VSWR>
-		<CrossPolarization>Antennas\Aperture Coupled Patch\farfield_H_and_E_x.csv</CrossPolarization>
+		<VSWRMap>Antennas\Aperture Coupled Patch\VSWR.csv</VSWRMap>
+		<CrossPolarizationMap>Antennas\Aperture Coupled Patch\farfield_H_and_E_x.csv</CrossPolarizationMap>
 		<Dimensions>
 			<Dimension>
 				<Name>Radiation_Patch_a</Name>
@@ -207,8 +212,9 @@
 	</Antenna>
 	<Antenna>
 		<Name>Circular Corrugated Horn</Name>
-		<Document>Antennas/横向槽圆锥波纹喇叭天线.xps</Document>
-		<Image>Antennas/Images/横向槽圆锥波纹喇叭天线.png</Image>
+		<Document>Antennas/Circular Corrugated Horn.xps</Document>
+		<Image>Antennas/Images/Circular Corrugated Horn.png</Image>
+		<DimensionsImage>Antennas/Images/Circular_Corrugated_Horn_Dimensions.png</DimensionsImage>
 		<MinFreq>8</MinFreq>
 		<MinFreqUnit>GHz</MinFreqUnit>
 		<MaxFreq>75</MaxFreq>
@@ -221,7 +227,7 @@
 				<FilePath>Antennas\Circular Corrugated Horn\Gain_Theta.csv</FilePath>
 			</ThetaGainMap>
 		</ThetaGainMaps>
-		<VSWR>Antennas\Circular Corrugated Horn\VSWR.csv</VSWR>
+		<VSWRMap>Antennas\Circular Corrugated Horn\VSWR.csv</VSWRMap>
 		<Dimensions>
 			<Dimension>
 				<Name>waveguide_D</Name>
@@ -275,8 +281,9 @@
 	</Antenna>
 	<Antenna>
 		<Name>Pyramid Horn</Name>
-		<Document>Antennas/角锥喇叭天线.xps</Document>
-		<Image>Antennas/Images/角锥喇叭天线.png</Image>
+		<Document>Antennas/Pyramid Horn.xps</Document>
+		<Image>Antennas/Images/Pyramid Horn.png</Image>
+		<DimensionsImage>Antennas/Images/Pyramid_Horn_Dimensions.png</DimensionsImage>
 		<fMax>330</fMax>
 		<fMaxUnit>GHz</fMaxUnit>
 		<fMin>320</fMin>
@@ -294,35 +301,35 @@
 			</ThetaGainMap>
 		</ThetaGainMaps>
 		<FreqGainMap>Antennas\Pyramid Horn\GAIN_FREQ.csv</FreqGainMap>
-		<VSWR>Antennas\Pyramid Horn\VSWR.csv</VSWR>
-		<CrossPolarization>Antennas\Pyramid Horn\E-X.csv</CrossPolarization>
+		<VSWRMap>Antennas\Pyramid Horn\VSWR.csv</VSWRMap>
+		<CrossPolarizationMap>Antennas\Pyramid Horn\E-X.csv</CrossPolarizationMap>
 		<Dimensions>
 			<Dimension>
-				<Name>Waveguide_a</Name>
-				<Value>22.86</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Waveguide_b</Name>
+				<Name>1 waveguide_b</Name>
 				<Value>10.16</Value>
 			</Dimension>
 			<Dimension>
-				<Name>Waveguide_length</Name>
+				<Name>2 waveguide_a</Name>
+				<Value>22.86</Value>
+			</Dimension>
+			<Dimension>
+				<Name>3 waveguide_length</Name>
 				<Value>30</Value>
 			</Dimension>
 			<Dimension>
-				<Name>Taper_a</Name>
+				<Name>4 Taper_b</Name>
+				<Value>147.5</Value>
+			</Dimension>
+			<Dimension>
+				<Name>5 taper_a</Name>
 				<Value>186.1</Value>
 			</Dimension>
 			<Dimension>
-				<Name>Taper_b</Name>
-				<Value>0.147.5</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Taper_length</Name>
+				<Name>6 taper_length</Name>
 				<Value>295.3</Value>
 			</Dimension>
 			<Dimension>
-				<Name>Waveguide_thickness</Name>
+				<Name>waveguide_thickness</Name>
 				<Value>1.5</Value>
 			</Dimension>
 		</Dimensions>

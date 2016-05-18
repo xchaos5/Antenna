@@ -10,15 +10,13 @@ namespace AntennaLibCore
     {
         public IList<BandRange> BandRanges;
 
-        public IList<Polarization> Polarizations;
+        public IList<string> Polarizations;
 
         public double? Gain;
 
         public int? _3dBWidth;
 
         public double? VSWR;
-
-        public double? Efficiency;
 
         public double? AxialRatio;
 
@@ -27,8 +25,22 @@ namespace AntennaLibCore
 
     public class MatchResult
     {
-        public bool IsMatch;
+        public bool IsMatch = false;
 
-        public bool IsBandPartialMatch;
+        public bool IsMarginMatch = true;
+
+        public Antenna Antenna { get; private set; }
+
+        public MatchResult(Antenna antenna)
+        {
+            Antenna = antenna;
+        }
+    }
+
+    public class QueryResult
+    {
+        public Antenna BestMatch { get; set; }
+
+        public IList<Antenna> OtherMatches { get; set; }
     }
 }

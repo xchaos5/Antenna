@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -11,7 +12,7 @@ using AntennaLibrary.Annotations;
 
 namespace AntennaLibrary
 {
-    public class QueryBandRanges
+    public class AntennaQueryViewModel : INotifyPropertyChanged
     {
         private uint _numOfBands;
         public uint NumOfBands
@@ -46,5 +47,64 @@ namespace AntennaLibrary
         }
 
         public ObservableCollection<BandRange> BandRanges { get; set; } = new ObservableCollection<BandRange>();
+
+        private double? _gain;
+
+        public double? Gain
+        {
+            get { return _gain; }
+            set
+            {
+                _gain = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int? __3dBWidth;
+        public int? _3dBWidth
+        {
+            get { return __3dBWidth; }
+            set
+            {
+                __3dBWidth = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double? _VSWR;
+
+        public double? VSWR
+        {
+            get { return _VSWR; }
+            set
+            {
+                _VSWR = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double? Efficiency;
+
+        public double? AxialRatio;
+
+        private double? _CrossPolarization;
+
+        public double? CrossPolarization
+        {
+            get { return _CrossPolarization; }
+            set
+            {
+                _CrossPolarization = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

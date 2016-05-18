@@ -59,12 +59,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ValidationRule.cs" />
     <Compile Include="ValueConverter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="QueryBandRanges.cs" />
+    <Compile Include="AntennaQueryViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -94,21 +95,36 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Antennas\卡塞格伦天线.xps">
+    <Content Include="Antennas\Aperture Coupled Patch.xps">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Antennas\双极化四脊锥形喇叭天线.xps">
+    </Content>
+    <Content Include="Antennas\Cassegrain.xps">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Antennas\微带缝隙耦合贴片天线.xps">
+    </Content>
+    <Content Include="Antennas\Circular Corrugated Horn.xps">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Antennas\横向槽圆锥波纹喇叭天线.xps">
+    </Content>
+    <Content Include="Antennas\Double Ridged Horn.xps">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Antennas\角锥喇叭天线.xps">
+    </Content>
+    <Content Include="Antennas\Images\Aperture_Coupled_Patch_Dimensions.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
+    <Content Include="Antennas\Images\Cassegrain_Dimensions.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Images\Circular_Corrugated_Horn_Dimensions.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Images\Double_Ridged_Horn_Dimensions.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Images\Pyramid_Horn_Dimensions.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Pyramid Horn.xps">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -120,21 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Antenna.jpg" />
-    <Resource Include="Antennas\Images\卡塞格伦天线.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Antennas\Images\双极化四脊锥形喇叭天线.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Antennas\Images\微带缝隙耦合贴片天线.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Antennas\Images\横向槽圆锥波纹喇叭天线.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Antennas\Images\角锥喇叭天线.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AntennaLibCore\AntennaLibCore.csproj">
@@ -144,6 +145,23 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Antenna.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Antennas\Images\Aperture Coupled Patch.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Images\Cassegrain.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Images\Circular Corrugated Horn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Images\Double Ridged Horn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Images\Pyramid Horn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

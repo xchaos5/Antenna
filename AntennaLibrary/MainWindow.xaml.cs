@@ -81,14 +81,15 @@ namespace AntennaLibrary
 
         private AntennaManager _antennaManager = new AntennaManager();
 
-        public QueryBandRanges BandRanges { get; set; } = new QueryBandRanges();
+        public AntennaQueryViewModel QueryViewModel { get; set; } = new AntennaQueryViewModel();
         public ObservableCollection<AntennaViewModel> AntennaViewModels { get; set; }
         public ObservableCollection<AntennaTag> Tags { get; set; }
 
         public MainWindow()
         {
             DataContext = this;
-            BandRanges.NumOfBands = 1;
+            QueryViewModel.NumOfBands = 1;
+
             InitializeComponent();
         }
 
@@ -188,7 +189,7 @@ namespace AntennaLibrary
         {
             if (string.IsNullOrEmpty(tbNumOfBands.Text))
             {
-                BandRanges.NumOfBands = 0;
+                QueryViewModel.NumOfBands = 0;
                 return;
             }
 
@@ -199,11 +200,11 @@ namespace AntennaLibrary
             }
             else
             {
-                BandRanges.NumOfBands = numOfBands;
+                QueryViewModel.NumOfBands = numOfBands;
             }
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void ButtonClear_OnClick(object sender, RoutedEventArgs e)
         {
             foreach (var antennaTag in Tags)
             {
@@ -211,7 +212,7 @@ namespace AntennaLibrary
             }
         }
 
-        private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
+        private void AntennasViewItem_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             var element = e.Source as FrameworkElement;
             var antennaViewModel = element.DataContext as AntennaViewModel;
@@ -231,20 +232,60 @@ namespace AntennaLibrary
             {
                 AntennasViewer.Visibility = Visibility.Collapsed;
                 DocumentViewer.Visibility = Visibility.Visible;
+                DimensionsViewer.Visibility = Visibility.Collapsed;
                 QueryResultViewer.Visibility = Visibility.Collapsed;
             }
             else if (TabDesign.IsSelected)
             {
                 AntennasViewer.Visibility = Visibility.Visible;
                 DocumentViewer.Visibility = Visibility.Collapsed;
+                DimensionsViewer.Visibility = Visibility.Collapsed;
                 QueryResultViewer.Visibility = Visibility.Collapsed;
             }
         }
 
         private void BtnFind_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!Validation.GetHasError(TbGain) && !Validation.GetHasError(Tb3dBWidth) && !Validation.GetHasError(TbVSWR) && !Validation.GetHasError(TbCrossPolarization))
+            {
+                AntennasViewer.Visibility = Visibility.Collapsed;
+                DocumentViewer.Visibility = Visibility.Collapsed;
+                DimensionsViewer.Visibility = Visibility.Collapsed;
+                QueryResultViewer.Visibility = Visibility.Visible;
+
+                var query = new AntennaQuery();
+                query.BandRanges = QueryViewModel.BandRanges;
+                query.Gain = QueryViewModel.Gain;
+                query._3dBWidth = QueryViewModel._3dBWidth;
+                query.CrossPolarization = QueryViewModel.CrossPolarization;
+                QueryResultViewer.DataContext = _antennaManager.ExecuteAntennaQuery(query);
+            }
+        }
+
+        private void QueryResult_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var element = e.Source as FrameworkElement;
+            if (element == null) return;
+
             AntennasViewer.Visibility = Visibility.Collapsed;
             DocumentViewer.Visibility = Visibility.Collapsed;
+            DimensionsViewer.Visibility = Visibility.Visible;
+            QueryResultViewer.Visibility = Visibility.Collapsed;
+
+            if (element.DataContext is QueryResult)
+            {
+                var antenna = element.DataContext as QueryResult;
+                DimensionsViewer.DataContext = antenna.BestMatch;
+            }
+            if (element.DataContext is Antenna)
+            {
+                DimensionsViewer.DataContext = element.DataContext;
+            }
+        }
+
+        private void BtnDimensionsClose_OnClick(object sender, RoutedEventArgs e)
+        {
+            DimensionsViewer.Visibility = Visibility.Collapsed;
             QueryResultViewer.Visibility = Visibility.Visible;
         }
     }

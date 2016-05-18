@@ -4,11 +4,28 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AntennaLibrary"
+        xmlns:io="clr-namespace:System.IO;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Antenna Library" Height="960" Width="1280" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <local:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
+        <local:FileNameWithoutExtensionConverter x:Key="FileNameWithoutExtensionConverter"/>
+        <local:FreqUnitConverter x:Key="FreqUnitConverter"></local:FreqUnitConverter>
+        <ControlTemplate x:Key="ErrorTemplate">
+            <Border BorderBrush="Red" BorderThickness="1">
+                <AdornedElementPlaceholder/>
+            </Border>
+        </ControlTemplate>
+        <Style TargetType="TextBox">
+            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}">
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <Style TargetType="Button">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -20,13 +37,8 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Cursor" Value="Hand"></Setter>
-                    <Setter Property="Opacity" Value="0.5"></Setter>
                 </Trigger>
             </Style.Triggers>
-        </Style>
-        <Style TargetType="Button" x:Key="Grayed">
-            <Setter Property="Opacity" Value="1.0"></Setter>
-
         </Style>
         <Style TargetType="FrameworkElement" x:Key="FadeIn">
             <Style.Triggers>
@@ -81,7 +93,7 @@
             <ColumnDefinition Width="300"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TabControl Grid.Column="0" TabStripPlacement="Top" Margin="16" SelectionChanged="TabItemHeader_OnClick">
+        <TabControl Grid.Column="0" TabStripPlacement="Top" Margin="8" SelectionChanged="TabItemHeader_OnClick">
             <TabItem x:Name="TabContent">
                 <TabItem.HeaderTemplate>
                     <ItemContainerTemplate>
@@ -96,10 +108,14 @@
                                 <TextBlock Text="{Binding Info.Name}"/>
                             </StackPanel>
                         </HierarchicalDataTemplate>
+                        <DataTemplate DataType="{x:Type io:FileInfo}">
+                            <TextBlock Text="{Binding Name, Converter={StaticResource FileNameWithoutExtensionConverter}}"></TextBlock>
+                        </DataTemplate>
                     </TreeView.Resources>
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="{x:Type TreeViewItem}">
                             <Setter Property="IsExpanded" Value="True" />
+                            <Setter Property="Cursor" Value="Hand"></Setter>
                         </Style>
                     </TreeView.ItemContainerStyle>
                 </TreeView>
@@ -118,11 +134,11 @@
                             <RowDefinition Height="Auto"></RowDefinition>
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
-                            <Label Grid.Row="0" Content="Number of bands:" Width="108" Height="26" Margin="10,10,0,10" VerticalAlignment="Bottom"/>
-                            <TextBox Grid.Row="1" x:Name="tbNumOfBands" Text="{Binding Path=BandRanges.NumOfBands, Mode=TwoWay}"  Width="100" Height="20" TextChanged="TbNumOfBands_OnTextChanged" />
+                            <Label Content="Number of bands:" Width="108" Height="26" Margin="10,10,0,10" VerticalAlignment="Bottom"/>
+                            <TextBox Name="tbNumOfBands" Text="{Binding Path=QueryViewModel.NumOfBands, Mode=TwoWay}"  Width="100" Height="20" TextChanged="TbNumOfBands_OnTextChanged" />
                         </StackPanel>
                         <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1" Grid.Row="0" Grid.Column="0"></Border>
-                        <ItemsControl Grid.Row="1" x:Name="Bands" ItemsSource="{Binding Path=BandRanges.BandRanges}">
+                        <ItemsControl Grid.Row="1" x:Name="Bands" ItemsSource="{Binding Path=QueryViewModel.BandRanges}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="10">
@@ -149,19 +165,19 @@
                                         </Label>
                                         <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,0,10">from:</Label>
                                         <TextBox Grid.Row="0" Grid.Column="2" Width="50" Height="20" Text="{Binding Path=LowerBound.Value}"></TextBox>
-                                        <ComboBox Grid.Row="0" Grid.Column="3" Margin="0,0,42,0" HorizontalAlignment="Left" Width="52" Height="20">
-                                            <ComboBoxItem>Hz</ComboBoxItem>
-                                            <ComboBoxItem>KHz</ComboBoxItem>
-                                            <ComboBoxItem IsSelected="True">MHz</ComboBoxItem>
-                                            <ComboBoxItem>GHz</ComboBoxItem>
+                                        <ComboBox Grid.Row="0" Grid.Column="3" Margin="0,0,42,0" SelectedValuePath="Content" SelectedValue="{Binding Path=LowerBound.Unit, Converter={StaticResource FreqUnitConverter}}" HorizontalAlignment="Left" Width="52" Height="20">
+                                            <ComboBoxItem Content="Hz"></ComboBoxItem>
+                                            <ComboBoxItem Content="KHz"></ComboBoxItem>
+                                            <ComboBoxItem Content="MHz" IsSelected="True"></ComboBoxItem>
+                                            <ComboBoxItem Content="GHz"></ComboBoxItem>
                                         </ComboBox>
                                         <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,0,10">to:</Label>
                                         <TextBox Grid.Row="1" Grid.Column="2" Width="50" Height="20" Text="{Binding Path=UpperBound.Value}"></TextBox>
-                                        <ComboBox Grid.Row="1" Grid.Column="3" HorizontalAlignment="Left" Width="52" Height="20">
-                                            <ComboBoxItem>Hz</ComboBoxItem>
-                                            <ComboBoxItem>KHz</ComboBoxItem>
-                                            <ComboBoxItem IsSelected="True">MHz</ComboBoxItem>
-                                            <ComboBoxItem>GHz</ComboBoxItem>
+                                        <ComboBox Grid.Row="1" Grid.Column="3" HorizontalAlignment="Left" SelectedValuePath="Content" SelectedValue="{Binding Path=UpperBound.Unit, Converter={StaticResource FreqUnitConverter}}" Width="52" Height="20">
+                                            <ComboBoxItem Content="Hz"></ComboBoxItem>
+                                            <ComboBoxItem Content="KHz"></ComboBoxItem>
+                                            <ComboBoxItem Content="MHz" IsSelected="True"></ComboBoxItem>
+                                            <ComboBoxItem Content="GHz"></ComboBoxItem>
                                         </ComboBox>
                                     </Grid>
                                 </DataTemplate>
@@ -188,28 +204,57 @@
                                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" Margin="30,10,0,10">Gain</Label>
-                            <TextBox Grid.Row="0" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
-                            <ComboBox Grid.Row="0" Grid.Column="2" HorizontalAlignment=" Left" Width="52" Height="20">
-                                <ComboBoxItem IsSelected="True">dBi</ComboBoxItem>
-                                <ComboBoxItem>dBd</ComboBoxItem>
-                            </ComboBox>
+                            <TextBox Grid.Row="0" Grid.Column="1" Name="TbGain" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left">
+                                <TextBox.Text>
+                                    <Binding Path="QueryViewModel.Gain" Mode="TwoWay" UpdateSourceTrigger="Default">
+                                        <Binding.ValidationRules>
+                                            <local:GainValidationRule></local:GainValidationRule>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment=" Left" Width="52" Height="20">dBi</TextBlock>
                             <Label Grid.Row="1" Grid.Column="0" Margin="30,10,0,10">3dB width</Label>
-                            <TextBox Grid.Row="1" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
+                            <TextBox Grid.Row="1" Grid.Column="1" Name="Tb3dBWidth" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left">
+                                <TextBox.Text>
+                                    <Binding Path="QueryViewModel._3dBWidth" Mode="TwoWay" UpdateSourceTrigger="Default">
+                                        <Binding.ValidationRules>
+                                            <local:_3dBWidthValidationRule></local:_3dBWidthValidationRule>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                             <Label Grid.Row="1" Grid.Column="2" Margin="0,10,0,10">°</Label>
                             <Label Grid.Row="2" Grid.Column="0" Margin="30,10,0,10">VSWR &lt;</Label>
-                            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
+                            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Name="TbVSWR" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left">
+                                <TextBox.Text>
+                                    <Binding Path="QueryViewModel.VSWR" Mode="TwoWay" UpdateSourceTrigger="Default">
+                                        <Binding.ValidationRules>
+                                            <local:VSWRValidationRule></local:VSWRValidationRule>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                             <Label Grid.Row="3" Grid.Column="0" Margin="30,10,0,10">Efficiency &gt;</Label>
                             <TextBox Grid.Row="3" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
                             <Label Grid.Row="3" Grid.Column="2" Margin="0,10,0,10">%</Label>
                             <Label Grid.Row="4" Grid.Column="0" Margin="30,10,0,10">Polarization</Label>
-                            <RadioButton Grid.Row="5" Grid.Column="0" Margin="30,10,0,10" x:Name="RbSingle" IsChecked="True">Single</RadioButton>
-                            <RadioButton Grid.Row="5" Grid.Column="1" Margin="0,10,0,10" x:Name="RbDual">Dual</RadioButton>
-                            <RadioButton Grid.Row="6" Grid.Column="0" Margin="30,10,0,10" x:Name="RbLinear">Linear</RadioButton>
-                            <RadioButton Grid.Row="6" Grid.Column="1" Margin="0,10,0,10" x:Name="RbCircular">Circular</RadioButton>
+                            <RadioButton Grid.Row="5" Grid.Column="0" Margin="30,10,0,10" x:Name="RbSingle" GroupName="SingleDual" IsChecked="True">Single</RadioButton>
+                            <RadioButton Grid.Row="5" Grid.Column="1" Margin="0,10,0,10" x:Name="RbDual" GroupName="SingleDual">Dual</RadioButton>
+                            <RadioButton Grid.Row="6" Grid.Column="0" Margin="30,10,0,10" x:Name="RbLinear" GroupName="LinearCircular">Linear</RadioButton>
+                            <RadioButton Grid.Row="6" Grid.Column="1" Margin="0,10,0,10" x:Name="RbCircular" GroupName="LinearCircular" IsChecked="True">Circular</RadioButton>
                             <Label Grid.Row="7" Grid.Column="0" Margin="30,10,0,10">Axial Ratio</Label>
                             <TextBox Grid.Row="7" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
-                            <Label Grid.Row="8" Grid.Column="0" Margin="0,10,0,10" x:Name="lblCross" Visibility="{Binding ElementName=RbCircular, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">Cross Polarization</Label>
-                            <TextBox Grid.Row="8" Grid.Column="1" Width="75" Height="20" x:Name="tbCross" Visibility="{Binding ElementName=RbCircular, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
+                            <Label Grid.Row="8" Grid.Column="0" Margin="0,10,0,10" Name="LblCross" Visibility="{Binding ElementName=RbCircular, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">Cross Polarization</Label>
+                            <TextBox Grid.Row="8" Grid.Column="1" Name="TbCrossPolarization" Width="75" Height="20" Visibility="{Binding ElementName=RbCircular, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0,10,0,10" HorizontalAlignment="Left">
+                                <TextBox.Text>
+                                    <Binding Path="QueryViewModel.CrossPolarization" Mode="TwoWay" UpdateSourceTrigger="Default">
+                                        <Binding.ValidationRules>
+                                            <local:CrossPolarizationValidationRule></local:CrossPolarizationValidationRule>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                             <Button Grid.Row="9" Grid.Column="2" x:Name="BtnFind" Margin="0,10,0,10" Click="BtnFind_OnClick">Find</Button>
                         </Grid>
                     </Grid>
@@ -217,93 +262,180 @@
             </TabItem>
         </TabControl>
 
-        <StackPanel Grid.Column="1" Orientation="Vertical" x:Name="AntennasViewer" Style="{StaticResource FadeIn}">
-            <Grid Background="LightGray">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="50"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Margin="2" VerticalAlignment="Center">Tags</Label>
-                <ItemsControl Grid.Column="1" x:Name="TagsPanel" Width="Auto">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" ItemHeight="30"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <ToggleButton Padding="2,0,2,0" Margin="0,2,0,2" IsChecked="{Binding Path=IsChecked, Mode=TwoWay}">
-                                <TextBlock Text="{Binding Path=Name}" Margin="8,0,8,0"></TextBlock>
-                            </ToggleButton>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <Button Grid.Column="2" Background="Transparent" BorderThickness="0" Width="15" Height="15" Click="ButtonBase_OnClick">
-                    <Path Data="M0,0 L1,1 M0,1 L1,0" Stretch="Uniform" StrokeThickness="2" Stroke="DarkRed" />
-                </Button>
-            </Grid>
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <ItemsControl x:Name="AntennasPanel">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" ItemWidth="320" ItemHeight="240" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="20">
-                                <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=Antenna.ImagePath}" Opacity="{Binding Path=IsSelected, Converter={StaticResource BoolToOpacityConverter}}" MouseDown="UIElement_OnMouseDown"></Image>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </StackPanel>
-        <DocumentViewer Grid.Column="1" x:Name="DocumentViewer" Style="{StaticResource FadeIn}"></DocumentViewer>
-        <Grid Grid.Column="1" x:Name="QueryResultViewer" Visibility="Collapsed">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Vertical">
-                <TextBlock FontWeight="Bold" Margin="20,20,20,0">Best Match</TextBlock>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Border BorderBrush="DarkCyan" Grid.Column="0" BorderThickness="2" Margin="20,10,20,10">
-                        <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=Antenna.ImagePath}" Width="320" Height="240"></Image>
-                    </Border>
-                    <Grid Grid.Column="1" Margin="20">
-                        <Grid.RowDefinitions>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                        </Grid.RowDefinitions>
+        <Border Grid.Column="1" BorderBrush="DarkGray" BorderThickness="1" x:Name="AntennasViewer" Margin="8" Style="{StaticResource FadeIn}">
+            <StackPanel Orientation="Vertical">
+                <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1">
+                    <Grid Background="LightGray">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="50"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Margin="2" VerticalAlignment="Center">Tags</Label>
+                        <ItemsControl Grid.Column="1" x:Name="TagsPanel" Width="Auto">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" ItemHeight="30"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ToggleButton Padding="2,0,2,0" Margin="0,2,0,2" IsChecked="{Binding Path=IsChecked, Mode=TwoWay}">
+                                        <TextBlock Text="{Binding Path=Name}" Margin="8,0,8,0"></TextBlock>
+                                    </ToggleButton>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Button Grid.Column="2" Name="BtnClear" Background="Transparent" BorderThickness="0" Width="15" Height="15" Click="ButtonClear_OnClick">
+                            <Path Data="M0,0 L1,1 M0,1 L1,0" Stretch="Uniform" StrokeThickness="2" Stroke="DarkRed" />
+                        </Button>
+                    </Grid>
+                </Border>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="AntennasPanel">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" ItemWidth="315" ItemHeight="240" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="16">
+                                    <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=Antenna.ImagePath}" Opacity="{Binding Path=IsSelected, Converter={StaticResource BoolToOpacityConverter}}" MouseDown="AntennasViewItem_OnMouseDown"></Image>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </StackPanel>
+        </Border>
+        <DocumentViewer Grid.Column="1" BorderBrush="DarkGray" BorderThickness="1" x:Name="DocumentViewer" Margin="8" Style="{StaticResource FadeIn}"></DocumentViewer>
+        <Border BorderBrush="DarkGray" BorderThickness="1" Grid.Column="1" x:Name="QueryResultViewer" Margin="8" Visibility="Collapsed" Style="{StaticResource FadeIn}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Vertical">
+                    <TextBlock FontWeight="Bold" Margin="20,10,20,0">Best Match</TextBlock>
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        
-                        <TextBlock Grid.Row="0" Grid.Column="0">Gain:</TextBlock>
-                        <TextBlock Grid.Row="1" Grid.Column="0">3dB Width:</TextBlock>
-                        <TextBlock Grid.Row="2" Grid.Column="0">VSWR:</TextBlock>
-                        <TextBlock Grid.Row="3" Grid.Column="0">Cross Polarization:</TextBlock>
-                        <TextBlock Grid.Row="4" Grid.Column="0">Axial Ratio:</TextBlock>
+                        <Border BorderBrush="DarkCyan" Grid.Column="0" BorderThickness="2" Margin="20,10,20,10">
+                            <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=BestMatch.ImagePath}" Width="280" Height="210" MouseDown="QueryResult_OnMouseDown"></Image>
+                        </Border>
+                        <Grid Grid.Column="1" Margin="20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="1"></TextBlock>
-                        <TextBlock Grid.Row="1" Grid.Column="1"></TextBlock>
-                        <TextBlock Grid.Row="2" Grid.Column="1"></TextBlock>
-                        <TextBlock Grid.Row="3" Grid.Column="1"></TextBlock>
-                        <TextBlock Grid.Row="4" Grid.Column="1"></TextBlock>
+                            <TextBlock Grid.Row="0" Grid.Column="0">Gain:</TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="0">3dB Width:</TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="0">VSWR:</TextBlock>
+                            <TextBlock Grid.Row="3" Grid.Column="0">Cross Polarization:</TextBlock>
+                            <TextBlock Grid.Row="4" Grid.Column="0">Axial Ratio:</TextBlock>
+
+                            <TextBlock Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Text="{Binding Path=BestMatch.Gain}"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Text="{Binding Path=BestMatch._3dBWidth}"></TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Text="{Binding Path=BestMatch.VSWR}"></TextBlock>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Margin="5,0,0,0" Text="{Binding Path=BestMatch.CrossPolarization}"></TextBlock>
+                            <TextBlock Grid.Row="4" Grid.Column="1" Margin="5,0,0,0" ></TextBlock>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </StackPanel>
-            <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1" Grid.Row="0"></Border>
-        </Grid>
+                </StackPanel>
+                <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1" Grid.Row="0"></Border>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock FontWeight="Bold" Margin="20,10,20,0">Other Matches</TextBlock>
+                        <ItemsControl x:Name="OtherMatchesPanel" ItemsSource="{Binding OtherMatches}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Border BorderBrush="DarkCyan" Grid.Column="0" BorderThickness="2" Margin="20,10,20,10">
+                                            <Image Style="{StaticResource ClickableImage}" Source="{Binding ImagePath}" Width="240" Height="180" MouseDown="QueryResult_OnMouseDown"></Image>
+                                        </Border>
+                                        <Grid Grid.Column="1" Margin="20">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Row="0" Grid.Column="0">Gain:</TextBlock>
+                                            <TextBlock Grid.Row="1" Grid.Column="0">3dB Width:</TextBlock>
+                                            <TextBlock Grid.Row="2" Grid.Column="0">VSWR:</TextBlock>
+                                            <TextBlock Grid.Row="3" Grid.Column="0">Cross Polarization:</TextBlock>
+                                            <TextBlock Grid.Row="4" Grid.Column="0">Axial Ratio:</TextBlock>
+
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Text="{Binding Gain}"></TextBlock>
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Text="{Binding _3dBWidth}"></TextBlock>
+                                            <TextBlock Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Text="{Binding VSWR}"></TextBlock>
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Margin="5,0,0,0" Text="{Binding CrossPolarization}"></TextBlock>
+                                            <TextBlock Grid.Row="4" Grid.Column="1" Margin="5,0,0,0" ></TextBlock>
+                                        </Grid>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="1" Name="DimensionsViewer" BorderBrush="DarkGray" Style="{StaticResource FadeIn}" BorderThickness="1" Margin="8" Visibility="Collapsed">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Orientation="Vertical">
+                    <Button Name="BtnDimensionsClose" Background="Transparent" HorizontalAlignment="Right" BorderThickness="0" Width="20" Height="20" Margin="8" Click="BtnDimensionsClose_OnClick">
+                        <Path Data="M0,0 L1,1 M0,1 L1,0" Stretch="Uniform" StrokeThickness="2" Stroke="DarkRed" />
+                    </Button>
+                    <Image MaxWidth="480" Margin="8" Source="{Binding DimensionsImagePath}"></Image>
+                    <ItemsControl ItemsSource="{Binding Dimensions}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"></StackPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Width="480">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Key}"></TextBlock>
+                                    <TextBlock Grid.Column="1" Text="{Binding Value}"></TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
     </Grid>
 </Window>

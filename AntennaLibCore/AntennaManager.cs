@@ -49,9 +49,18 @@ namespace AntennaLibCore
             return null;
         }
 
-        public IEnumerable<Antenna> ExecuteAntennaQuery(AntennaQuery query)
+        public QueryResult ExecuteAntennaQuery(AntennaQuery query)
         {
-            return _antennas.Values.Where(antenna => antenna.Match(query).IsMatch).ToList();
+            var queryResult = new QueryResult();
+            var results = _antennas.Values.Select(antenna => antenna.Match(query)).OrderByDescending(x => x.IsMarginMatch).ToList();
+            
+            if (results.Count > 0)
+            {
+                queryResult.BestMatch = results.First().Antenna;
+                queryResult.OtherMatches = results.Skip(1).Select(x => x.Antenna).ToList();
+            }
+
+            return queryResult;
         }
     }
 }
