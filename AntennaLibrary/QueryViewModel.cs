@@ -12,15 +12,15 @@ using AntennaLibrary.Annotations;
 
 namespace AntennaLibrary
 {
-    public class AntennaQueryViewModel : INotifyPropertyChanged
+    public class QueryViewModel : INotifyPropertyChanged
     {
-        private uint _numOfBands;
-        public uint NumOfBands
+        private int _numOfBands;
+        public int NumOfBands
         {
             get { return _numOfBands; }
             set
             {
-                if (_numOfBands != value)
+                if (_numOfBands != value && value >= 0 && value <= 10)
                 {
                     _numOfBands = value;
                     BandRanges.Clear();

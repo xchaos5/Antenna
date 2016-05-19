@@ -52,10 +52,12 @@ namespace AntennaLibCore
         public QueryResult ExecuteAntennaQuery(AntennaQuery query)
         {
             var queryResult = new QueryResult();
-            var results = _antennas.Values.Select(antenna => antenna.Match(query)).OrderByDescending(x => x.IsMarginMatch).ToList();
+            queryResult.HasResult = false;
+            var results = _antennas.Values.Select(antenna => antenna.Match(query)).Where(x => x.IsMatch).OrderByDescending(x => x.IsMarginMatch).ToList();
             
             if (results.Count > 0)
             {
+                queryResult.HasResult = true;
                 queryResult.BestMatch = results.First().Antenna;
                 queryResult.OtherMatches = results.Skip(1).Select(x => x.Antenna).ToList();
             }

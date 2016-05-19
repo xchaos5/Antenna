@@ -14,7 +14,7 @@ namespace AntennaLibrary
     /// </summary>
     public partial class App : Application
     {
-        private const int MINIMUM_SPLASH = 1500;
+        private const int MINIMUM_SPLASH = 1000;
 
         protected override async void OnStartup(StartupEventArgs e)
         {

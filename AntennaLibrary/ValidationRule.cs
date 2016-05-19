@@ -8,6 +8,22 @@ using System.Windows.Controls;
 
 namespace AntennaLibrary
 {
+    public class NumOfBandsValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            if (!string.IsNullOrEmpty(value as string))
+            {
+                int numOfBands;
+                if (!int.TryParse((string)value, out numOfBands) || numOfBands < 1 || numOfBands > 10)
+                {
+                    return new ValidationResult(false, "Number of bands must be between 1 and 10");
+                }
+            }
+            return new ValidationResult(true, null);
+        }
+    }
+
     public class GainValidationRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)

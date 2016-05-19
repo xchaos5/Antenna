@@ -10,7 +10,7 @@ namespace AntennaLibCore
     {
         public IList<BandRange> BandRanges;
 
-        public IList<string> Polarizations;
+        public IList<string> Polarizations = new List<string>();
 
         public double? Gain;
 
@@ -39,6 +39,8 @@ namespace AntennaLibCore
 
     public class QueryResult
     {
+        public bool HasResult { get; set; }
+
         public Antenna BestMatch { get; set; }
 
         public IList<Antenna> OtherMatches { get; set; }

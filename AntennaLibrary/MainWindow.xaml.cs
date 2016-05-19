@@ -81,7 +81,7 @@ namespace AntennaLibrary
 
         private AntennaManager _antennaManager = new AntennaManager();
 
-        public AntennaQueryViewModel QueryViewModel { get; set; } = new AntennaQueryViewModel();
+        public QueryViewModel QueryViewModel { get; set; } = new QueryViewModel();
         public ObservableCollection<AntennaViewModel> AntennaViewModels { get; set; }
         public ObservableCollection<AntennaTag> Tags { get; set; }
 
@@ -187,14 +187,14 @@ namespace AntennaLibrary
 
         private void TbNumOfBands_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (string.IsNullOrEmpty(tbNumOfBands.Text))
+            if (string.IsNullOrEmpty(TbNumOfBands.Text))
             {
                 QueryViewModel.NumOfBands = 0;
                 return;
             }
 
-            uint numOfBands;
-            if (!uint.TryParse(tbNumOfBands.Text, out numOfBands))
+            int numOfBands;
+            if (!int.TryParse(TbNumOfBands.Text, out numOfBands))
             {
                 MessageBox.Show("请输入正整数");
             }
@@ -246,7 +246,7 @@ namespace AntennaLibrary
 
         private void BtnFind_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!Validation.GetHasError(TbGain) && !Validation.GetHasError(Tb3dBWidth) && !Validation.GetHasError(TbVSWR) && !Validation.GetHasError(TbCrossPolarization))
+            if (!Validation.GetHasError(TbNumOfBands) && !Validation.GetHasError(TbGain) && !Validation.GetHasError(Tb3dBWidth) && !Validation.GetHasError(TbVSWR) && !Validation.GetHasError(TbCrossPolarization))
             {
                 AntennasViewer.Visibility = Visibility.Collapsed;
                 DocumentViewer.Visibility = Visibility.Collapsed;
@@ -257,7 +257,24 @@ namespace AntennaLibrary
                 query.BandRanges = QueryViewModel.BandRanges;
                 query.Gain = QueryViewModel.Gain;
                 query._3dBWidth = QueryViewModel._3dBWidth;
+                query.VSWR = QueryViewModel.VSWR;
                 query.CrossPolarization = QueryViewModel.CrossPolarization;
+                if (RbSingle.IsChecked != null && RbSingle.IsChecked.Value)
+                {
+                    query.Polarizations.Add("single band");
+                }
+                if (RbDual.IsChecked != null && RbDual.IsChecked.Value)
+                {
+                    query.Polarizations.Add("dual band");
+                }
+                if (RbLinear.IsChecked != null && RbLinear.IsChecked.Value)
+                {
+                    query.Polarizations.Add("linear polarization");
+                }
+                if (RbCircular.IsChecked != null && RbCircular.IsChecked.Value)
+                {
+                    query.Polarizations.Add("circular polarization");
+                }
                 QueryResultViewer.DataContext = _antennaManager.ExecuteAntennaQuery(query);
             }
         }
@@ -287,6 +304,11 @@ namespace AntennaLibrary
         {
             DimensionsViewer.Visibility = Visibility.Collapsed;
             QueryResultViewer.Visibility = Visibility.Visible;
+        }
+
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

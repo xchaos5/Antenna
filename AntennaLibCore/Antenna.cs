@@ -180,47 +180,55 @@ namespace AntennaLibCore
 
         public IList<KeyValuePair<string, double>> Dimensions { get; set; }
 
-        public double? Gain
+        public string Gain
         {
             get
             {
                 if (FreqGainMap != null)
                 {
-                    return FreqGainMap.Max(x => x.Value);
+                    return (int)FreqGainMap.Max(x => x.Value) + "dBi";
                 }
                 if (ThetaGainMaps != null && ThetaGainMaps.Count > 0)
                 {
-                    return ThetaGainMaps[0].MaxGain;
+                    return (int)ThetaGainMaps[0].MaxGain + "dBi";
                 }
-                return null;
+                return string.Empty;
             }
         }
 
-        public double? _3dBWidth
+        public string _3dBWidth
         {
             get
             {
                 if (ThetaGainMaps != null && ThetaGainMaps.Count > 0)
                 {
-                    return ThetaGainMaps[0]._3dBWidth;
+                    return (int)ThetaGainMaps[0]._3dBWidth + "°";
                 }
-                return null;
+                return string.Empty;
             }
         }
 
-        public double? VSWR
+        public string VSWR
         {
             get
             {
-                return VSWRMap?.Max(x => x.Value);
+                if (VSWRMap != null)
+                {
+                    return Math.Round(VSWRMap.Max(x => x.Value), 1).ToString();
+                }
+                return string.Empty;
             }
         }
 
-        public double? CrossPolarization
+        public string CrossPolarization
         {
             get
             {
-                return CrossPolarizationMap?.MaxGain;
+                if (CrossPolarizationMap != null)
+                {
+                    return (int)CrossPolarizationMap.MaxGain + "dB";
+                }
+                return string.Empty;
             }
         }
 
@@ -270,7 +278,7 @@ namespace AntennaLibCore
                 if (query.VSWR != null && VSWRMap != null)
                 {
                     var vswr = GetVSWRByFreq(f0);
-                    if (Math.Abs((vswr - query.VSWR.Value)/query.VSWR.Value) > 0.1)
+                    if (vswr > query.VSWR.Value * 1.1)
                     {
                         return result;
                     }
@@ -282,7 +290,7 @@ namespace AntennaLibCore
             {
                 foreach (var polarization in query.Polarizations)
                 {
-                    if (!Tags.Contains(polarization))
+                    if (!Tags.Contains(polarization, StringComparer.InvariantCultureIgnoreCase))
                     {
                         return result;
                     }
