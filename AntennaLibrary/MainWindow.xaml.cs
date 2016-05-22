@@ -28,62 +28,32 @@ namespace AntennaLibrary
     /// </summary>
     public partial class MainWindow : Window
     {
-        public class AntennaTag : INotifyPropertyChanged
+        public enum Panel
         {
-            public string Name { get; set; }
-
-            private bool _isChecked;
-            public bool IsChecked
-            {
-                get { return _isChecked; }
-                set
-                {
-                    _isChecked = value;
-                    OnPropertyChanged();
-                }
-            }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            [NotifyPropertyChangedInvocator]
-            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
+            Document,
+            Antennas,
+            Dimensions,
+            QueryResult,
         }
 
-        public class AntennaViewModel : INotifyPropertyChanged
+        private readonly Dictionary<string, Panel> _panels = new Dictionary<string, Panel>()
         {
-            public Antenna Antenna { get; set; }
+            {"DocumentPanel", Panel.Document},
+            {"AntennasPanel", Panel.Antennas},
+            {"DimensionsPanel" ,Panel.Dimensions},
+            {"QueryResultPanel" ,Panel.QueryResult},
+        };
 
-            private bool _isSelected;
-            public bool IsSelected
-            {
-                get
-                {
-                    return _isSelected;
-                }
-                set
-                {
-                    _isSelected = value;
-                    OnPropertyChanged();
-                }
-            }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            [NotifyPropertyChangedInvocator]
-            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
+        private Panel _lastPanel = Panel.Antennas;
+        private Panel _currentPanel = Panel.Antennas;
 
         private AntennaManager _antennaManager = new AntennaManager();
 
         public QueryViewModel QueryViewModel { get; set; } = new QueryViewModel();
         public ObservableCollection<AntennaViewModel> AntennaViewModels { get; set; }
         public ObservableCollection<AntennaTag> Tags { get; set; }
+
+        public AntennaDocumentsRoot AntennaDocuments { get; set; }
 
         public MainWindow()
         {
@@ -95,7 +65,7 @@ namespace AntennaLibrary
 
         public void Initialize()
         {
-            Directory_Load();
+            //Directory_Load();
 
             var antennas = Utils.LoadAntennasFromFile("Antennas.xml");
             foreach (var antenna in antennas)
@@ -114,10 +84,6 @@ namespace AntennaLibrary
                 antennaViewModels.Add(antennaViewModel);
             }
             AntennaViewModels = antennaViewModels;
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                AntennasPanel.ItemsSource = AntennaViewModels;
-            }));
 
             Tags = new ObservableCollection<AntennaTag>();
             foreach (var tag in _antennaManager.Tags)
@@ -126,9 +92,20 @@ namespace AntennaLibrary
                 antennaTag.PropertyChanged += AntennaTagOnPropertyChanged;
                 Tags.Add(antennaTag);
             }
+
+            AntennaDocuments = new AntennaDocumentsRoot() { Name = "Antennas" };
+            AntennaDocuments.LoadFromFile("AntennaDocuments.xml");
+
             Dispatcher.BeginInvoke(new Action(() =>
             {
+                AntennasControl.ItemsSource = AntennaViewModels;
                 TagsPanel.ItemsSource = Tags;
+                TreeViewRoot.ItemsSource = AntennaDocuments.Categories;
+
+                QueryResultPanel.DataContext = new QueryResult()
+                {
+                    HasResult = false
+                };
             }));
         }
 
@@ -175,6 +152,33 @@ namespace AntennaLibrary
             }));
         }
 
+        private void ShowPanel(Panel panel)
+        {
+            foreach (var p in _panels)
+            {
+                var panelElement = FindName(p.Key) as FrameworkElement;
+                if (p.Value == panel)
+                {
+                    if (panelElement != null)
+                    {
+                        panelElement.Visibility = Visibility.Visible;
+                    }
+                }
+                else
+                {
+                    if (panelElement != null)
+                    {
+                        panelElement.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+            if (_currentPanel != panel)
+            {
+                _lastPanel = _currentPanel;
+                _currentPanel = panel;
+            }
+        }
+
         private void DirectoryTreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             var file = e.NewValue as FileInfo;
@@ -182,6 +186,8 @@ namespace AntennaLibrary
             {
                 var xpsDoc = new XpsDocument(file.FullName, FileAccess.Read);
                 DocumentViewer.Document = xpsDoc.GetFixedDocumentSequence();
+
+                ShowPanel(Panel.Document);
             }
         }
 
@@ -221,26 +227,8 @@ namespace AntennaLibrary
             {
                 var xpsDoc = new XpsDocument(file.FullName, System.IO.FileAccess.Read);
                 DocumentViewer.Document = xpsDoc.GetFixedDocumentSequence();
-                DocumentViewer.Visibility = Visibility.Visible;
-                AntennasViewer.Visibility = Visibility.Collapsed;
-            }
-        }
 
-        private void TabItemHeader_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (TabContent.IsSelected)
-            {
-                AntennasViewer.Visibility = Visibility.Collapsed;
-                DocumentViewer.Visibility = Visibility.Visible;
-                DimensionsViewer.Visibility = Visibility.Collapsed;
-                QueryResultViewer.Visibility = Visibility.Collapsed;
-            }
-            else if (TabDesign.IsSelected)
-            {
-                AntennasViewer.Visibility = Visibility.Visible;
-                DocumentViewer.Visibility = Visibility.Collapsed;
-                DimensionsViewer.Visibility = Visibility.Collapsed;
-                QueryResultViewer.Visibility = Visibility.Collapsed;
+                ShowPanel(Panel.Document);
             }
         }
 
@@ -248,10 +236,7 @@ namespace AntennaLibrary
         {
             if (!Validation.GetHasError(TbNumOfBands) && !Validation.GetHasError(TbGain) && !Validation.GetHasError(Tb3dBWidth) && !Validation.GetHasError(TbVSWR) && !Validation.GetHasError(TbCrossPolarization))
             {
-                AntennasViewer.Visibility = Visibility.Collapsed;
-                DocumentViewer.Visibility = Visibility.Collapsed;
-                DimensionsViewer.Visibility = Visibility.Collapsed;
-                QueryResultViewer.Visibility = Visibility.Visible;
+                ShowPanel(Panel.QueryResult);
 
                 var query = new AntennaQuery();
                 query.BandRanges = QueryViewModel.BandRanges;
@@ -275,7 +260,7 @@ namespace AntennaLibrary
                 {
                     query.Polarizations.Add("circular polarization");
                 }
-                QueryResultViewer.DataContext = _antennaManager.ExecuteAntennaQuery(query);
+                QueryResultPanel.DataContext = _antennaManager.ExecuteAntennaQuery(query);
             }
         }
 
@@ -284,31 +269,52 @@ namespace AntennaLibrary
             var element = e.Source as FrameworkElement;
             if (element == null) return;
 
-            AntennasViewer.Visibility = Visibility.Collapsed;
-            DocumentViewer.Visibility = Visibility.Collapsed;
-            DimensionsViewer.Visibility = Visibility.Visible;
-            QueryResultViewer.Visibility = Visibility.Collapsed;
+            ShowPanel(Panel.Dimensions);
 
             if (element.DataContext is QueryResult)
             {
                 var antenna = element.DataContext as QueryResult;
-                DimensionsViewer.DataContext = antenna.BestMatch;
+                DimensionsPanel.DataContext = antenna.BestMatch;
             }
             if (element.DataContext is Antenna)
             {
-                DimensionsViewer.DataContext = element.DataContext;
+                DimensionsPanel.DataContext = element.DataContext;
             }
         }
 
-        private void BtnDimensionsClose_OnClick(object sender, RoutedEventArgs e)
+        private void BtnBack_OnClick(object sender, RoutedEventArgs e)
         {
-            DimensionsViewer.Visibility = Visibility.Collapsed;
-            QueryResultViewer.Visibility = Visibility.Visible;
+            ShowPanel(_lastPanel);
         }
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (TabContent.IsSelected)
+            {
+                ShowPanel(Panel.Antennas);
+            }
+        }
+
+        private void AntennaDocument_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var textBlcok = e.Source as TextBlock;
+            if (null != textBlcok)
+            {
+                var antennaDocument = textBlcok.DataContext as AntennaDocument;
+                if (null != antennaDocument)
+                {
+                    var file = new FileInfo(antennaDocument.Document);
+                    var xpsDoc = new XpsDocument(file.FullName, FileAccess.Read);
+                    DocumentViewer.Document = xpsDoc.GetFixedDocumentSequence();
+                }
+
+                ShowPanel(Panel.Document);
+            }
         }
     }
 }

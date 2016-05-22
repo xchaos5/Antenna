@@ -36,6 +36,10 @@ namespace AntennaLibCore
         {
             get
             {
+                if (UpperBound.NormalizedFreq == LowerBound.NormalizedFreq)
+                {
+                    return 0;
+                }
                 return (UpperBound.NormalizedFreq + LowerBound.NormalizedFreq) / 2 / (UpperBound.NormalizedFreq - LowerBound.NormalizedFreq);
             }
         }
@@ -103,8 +107,8 @@ namespace AntennaLibCore
             }
         }
 
-        private double? __3dBWidth;
-        public double _3dBWidth
+        private int? __3dBWidth;
+        public int _3dBWidth
         {
             get
             {
@@ -114,11 +118,11 @@ namespace AntennaLibCore
                     var thetaGains = Phi0Gains.OrderBy(x => Math.Abs(x.Value - gain)).ToList();
                     if (thetaGains.Count > 1)
                     {
-                        __3dBWidth = Math.Abs(thetaGains[1].Key - thetaGains[0].Key);
+                        __3dBWidth = (int)Math.Abs(thetaGains[1].Key - thetaGains[0].Key);
                     }
                     else
                     {
-                        __3dBWidth = 0.0;
+                        __3dBWidth = 0;
                     }
                 }
                 return __3dBWidth.Value;

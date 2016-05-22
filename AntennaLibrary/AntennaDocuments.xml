@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<AntennaCategories>
+	<Category Name="Aperture Antennas">
+		<SubCategory Name="Horn">
+			<Antenna Name="Circular Corrugated Horn">
+				<Document>Antennas/Circular Corrugated Horn.xps</Document>
+			</Antenna>
+			<Antenna Name="Double Ridged Horn">
+				<Document>Antennas/Double Ridged Horn.xps</Document>
+			</Antenna>
+			<Antenna Name="Pyramid Horn">
+				<Document>Antennas/Pyramid Horn.xps</Document>
+			</Antenna>
+		</SubCategory>
+	</Category>
+	<Category Name="Microstrip Antennas">
+		<SubCategory Name="Patch">
+			<Antenna Name="Aperture Coupled Patch">
+				<Document>Antennas/Aperture Coupled Patch.xps</Document>
+			</Antenna>
+		</SubCategory>
+	</Category>
+	<Category Name="Reflector Antennas">
+		<SubCategory Name="Parabolic reflector">
+			<Antenna Name="Cassegrain">
+				<Document>Antennas/Cassegrain.xps</Document>
+			</Antenna>
+		</SubCategory>
+	</Category>
+</AntennaCategories>

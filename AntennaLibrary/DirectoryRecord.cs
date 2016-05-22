@@ -23,7 +23,7 @@ namespace AntennaLibrary
         {
             get
             {
-                return from di in Info.GetDirectories("*", SearchOption.TopDirectoryOnly)
+                return from di in Info.GetDirectories("*", SearchOption.AllDirectories)
                        select new DirectoryRecord { Info = di };
             }
         }
