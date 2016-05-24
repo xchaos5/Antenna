@@ -143,19 +143,53 @@ namespace AntennaLibCore
 
                     if (antennaElement.Descendants("CrossPolarizationMap").Any())
                     {
-                        var crossPolarization = new CrossPolarizationMap();
-                        crossPolarization.LoadFromFile(antennaElement.Element("CrossPolarizationMap").Value);
-                        antenna.CrossPolarizationMap = crossPolarization;
+                        antenna.CrossPolarizationMaps = new List<ThetaGainMap>();
+                        foreach (var xpMapElement in antennaElement.Descendants("CrossPolarizationMap"))
+                        {
+                            var xpMap = new ThetaGainMap();
+                            xpMap.LoadFromFile(xpMapElement.Element("FilePath").Value);
+                            xpMap.Freq = new Frequency()
+                            {
+                                Value = GetDoubleValue(xpMapElement, "Freq"),
+                                Unit = GetFreqUnit(xpMapElement, "FreqUnit"),
+                            };
+                            antenna.CrossPolarizationMaps.Add(xpMap);
+                        }
+                        antenna.CrossPolarizationMaps.OrderBy(x => x.Freq.NormalizedFreq);
                     }
 
                     if (antennaElement.Descendants("FreqGainMap").Any())
                     {
-                        antenna.FreqGainMap = LoadFreqGainMapFromFile(antennaElement.Element("FreqGainMap").Value);
+                        antenna.FreqGainMaps = new List<FreqGainMap>();
+                        foreach (var fgMapElemeent in antennaElement.Descendants("FreqGainMap"))
+                        {
+                            var fgMap = new FreqGainMap();
+                            fgMap.LoadFromFile(fgMapElemeent.Element("FilePath").Value);
+                            fgMap.Freq = new Frequency()
+                            {
+                                Value = GetDoubleValue(fgMapElemeent, "Freq"),
+                                Unit = GetFreqUnit(fgMapElemeent, "FreqUnit"),
+                            };
+                            antenna.FreqGainMaps.Add(fgMap);
+                        }
+                        antenna.FreqGainMaps.OrderBy(x => x.Freq.NormalizedFreq);
                     }
 
                     if (antennaElement.Descendants("VSWRMap").Any())
                     {
-                        antenna.VSWRMap = LoadFreqGainMapFromFile(antennaElement.Element("VSWRMap").Value);
+                        antenna.VSWRMaps = new List<FreqGainMap>();
+                        foreach (var vswrMapElement in antennaElement.Descendants("VSWRMap"))
+                        {
+                            var vswrMap = new FreqGainMap();
+                            vswrMap.LoadFromFile(vswrMapElement.Element("FilePath").Value);
+                            vswrMap.Freq = new Frequency()
+                            {
+                                Value = GetDoubleValue(vswrMapElement, "Freq"),
+                                Unit = GetFreqUnit(vswrMapElement, "FreqUnit"),
+                            };
+                            antenna.VSWRMaps.Add(vswrMap);
+                        }
+                        antenna.VSWRMaps.OrderBy(x => x.Freq.NormalizedFreq);
                     }
 
                     if (antennaElement.Descendants("DimensionsImage").Any())
@@ -172,6 +206,11 @@ namespace AntennaLibCore
                             double dimValue = GetDoubleValue(dim, "Value");
                             antenna.Dimensions.Add(new KeyValuePair<string, double>(dimName, dimValue));
                         }
+                    }
+
+                    if (antennaElement.Descendants("Efficiency").Any())
+                    {
+                        antenna.Efficiency = GetDoubleValue(antennaElement, "Efficiency");
                     }
 
                     antennas.Add(antenna);

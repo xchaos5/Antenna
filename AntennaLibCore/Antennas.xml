@@ -22,6 +22,30 @@
 				<FilePath>Antennas\Cassegrain\farfield_Ka.csv</FilePath>
 			</ThetaGainMap>
 		</ThetaGainMaps>
+		<FreqGainMaps>
+			<FreqGainMap>
+				<Freq>10</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Cassegrain\Gain_freq_10GHz.csv</FilePath>
+			</FreqGainMap>
+			<FreqGainMap>
+				<Freq>35</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Cassegrain\Gain_freq_35GHz.csv</FilePath>
+			</FreqGainMap>
+		</FreqGainMaps>
+		<VSWRMaps>
+			<VSWRMap>
+				<Freq>10</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Cassegrain\VSWR_10GHz.csv</FilePath>
+			</VSWRMap>
+			<VSWRMap>
+				<Freq>35</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Cassegrain\VSWR_35GHz.csv</FilePath>
+			</VSWRMap>
+		</VSWRMaps>
 		<Dimensions>
 			<Dimension>
 				<Name>mainref_D(X)</Name>
@@ -101,13 +125,25 @@
 		<Tags>horn,linear polarization,directional,UWB,single band</Tags>
 		<ThetaGainMaps>
 			<ThetaGainMap>
-				<Freq>20</Freq>
+				<Freq>10</Freq>
 				<FreqUnit>GHz</FreqUnit>
 				<FilePath>Antennas\Double Ridged Horn\E_H.csv</FilePath>
 			</ThetaGainMap>
 		</ThetaGainMaps>
-		<FreqGainMap>Antennas\Double Ridged Horn\Gain_Freq.csv</FreqGainMap>
-		<CrossPolarizationMap>Antennas\Double Ridged Horn\E_X.csv</CrossPolarizationMap>
+		<FreqGainMaps>
+			<FreqGainMap>
+				<Freq>10</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Double Ridged Horn\Gain_freq.csv</FilePath>
+			</FreqGainMap>
+		</FreqGainMaps>
+		<CrossPolarizationMaps>
+			<CrossPolarizationMap>
+				<Freq>10</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Double Ridged Horn\E_X.csv</FilePath>
+			</CrossPolarizationMap>
+		</CrossPolarizationMaps>
 		<Dimensions>
 			<Dimension>
 				<Name>SQTH_waveguide_length</Name>
@@ -163,14 +199,32 @@
 		<Tags>patch,wideband,directional,linear polarization,single band</Tags>
 		<ThetaGainMaps>
 			<ThetaGainMap>
-				<Freq>12</Freq>
+				<Freq>20.5</Freq>
 				<FreqUnit>GHz</FreqUnit>
 				<FilePath>Antennas\Aperture Coupled Patch\farfield_H_and_E.csv</FilePath>
 			</ThetaGainMap>
 		</ThetaGainMaps>
-		<FreqGainMap>Antennas\Aperture Coupled Patch\Gain_Freq.csv</FreqGainMap>
-		<VSWRMap>Antennas\Aperture Coupled Patch\VSWR.csv</VSWRMap>
-		<CrossPolarizationMap>Antennas\Aperture Coupled Patch\farfield_H_and_E_x.csv</CrossPolarizationMap>
+		<FreqGainMaps>
+			<FreqGainMap>
+				<Freq>20.5</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Aperture Coupled Patch\Gain_Freq.csv</FilePath>
+			</FreqGainMap>
+		</FreqGainMaps>
+		<VSWRMaps>
+			<VSWRMap>
+				<Freq>20.5</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Aperture Coupled Patch\VSWR.csv</FilePath>
+			</VSWRMap>
+		</VSWRMaps>
+		<CrossPolarizationMaps>
+			<CrossPolarizationMap>
+				<Freq>20.5</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Aperture Coupled Patch\farfield_H_and_E_x.csv</FilePath>
+			</CrossPolarizationMap>
+		</CrossPolarizationMaps>
 		<Dimensions>
 			<Dimension>
 				<Name>Radiation_Patch_a</Name>
@@ -224,10 +278,23 @@
 			<ThetaGainMap>
 				<Freq>40</Freq>
 				<FreqUnit>GHz</FreqUnit>
-				<FilePath>Antennas\Circular Corrugated Horn\Gain_Theta.csv</FilePath>
+				<FilePath>Antennas\Circular Corrugated Horn\farfield_H_E.csv</FilePath>
 			</ThetaGainMap>
 		</ThetaGainMaps>
-		<VSWRMap>Antennas\Circular Corrugated Horn\VSWR.csv</VSWRMap>
+		<FreqGainMaps>
+			<FreqGainMap>
+				<Freq>10</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Circular Corrugated Horn\Gain_freq.csv</FilePath>
+			</FreqGainMap>
+		</FreqGainMaps>
+		<VSWRMaps>
+			<VSWRMap>
+				<Freq></Freq>
+				<FreqUnit></FreqUnit>
+				<FilePath>Antennas\Circular Corrugated Horn\VSWR.csv</FilePath>
+			</VSWRMap>
+		</VSWRMaps>
 		<Dimensions>
 			<Dimension>
 				<Name>waveguide_D</Name>
@@ -295,14 +362,32 @@
 		<Tags>horn,wideband,single band,high gain,directional,linear polarization</Tags>
 		<ThetaGainMaps>
 			<ThetaGainMap>
-				<Freq>40</Freq>
+				<Freq>8.75</Freq>
 				<FreqUnit>GHz</FreqUnit>
 				<FilePath>Antennas\Pyramid Horn\E-H.csv</FilePath>
 			</ThetaGainMap>
 		</ThetaGainMaps>
-		<FreqGainMap>Antennas\Pyramid Horn\GAIN_FREQ.csv</FreqGainMap>
-		<VSWRMap>Antennas\Pyramid Horn\VSWR.csv</VSWRMap>
-		<CrossPolarizationMap>Antennas\Pyramid Horn\E-X.csv</CrossPolarizationMap>
+		<FreqGainMaps>
+			<FreqGainMap>
+				<Freq>8.75</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Pyramid Horn\Gain_freq.csv</FilePath>
+			</FreqGainMap>
+		</FreqGainMaps>
+		<VSWRMaps>
+			<VSWRMap>
+				<Freq>8.75</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Pyramid Horn\VSWR.csv</FilePath>
+			</VSWRMap>
+		</VSWRMaps>
+		<CrossPolarizationMaps>
+			<CrossPolarizationMap>
+				<Freq>8.75</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Pyramid Horn\E-X.csv</FilePath>
+			</CrossPolarizationMap>
+		</CrossPolarizationMaps>
 		<Dimensions>
 			<Dimension>
 				<Name>1 waveguide_b</Name>

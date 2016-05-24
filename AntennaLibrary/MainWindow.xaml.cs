@@ -225,7 +225,7 @@ namespace AntennaLibrary
             var file = new FileInfo(antennaViewModel.Antenna.DocumentPath);
             if (null != file)
             {
-                var xpsDoc = new XpsDocument(file.FullName, System.IO.FileAccess.Read);
+                var xpsDoc = new XpsDocument(file.FullName, FileAccess.Read);
                 DocumentViewer.Document = xpsDoc.GetFixedDocumentSequence();
 
                 ShowPanel(Panel.Document);
@@ -234,7 +234,7 @@ namespace AntennaLibrary
 
         private void BtnFind_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!Validation.GetHasError(TbNumOfBands) && !Validation.GetHasError(TbGain) && !Validation.GetHasError(Tb3dBWidth) && !Validation.GetHasError(TbVSWR) && !Validation.GetHasError(TbCrossPolarization))
+            if (!Validation.GetHasError(TbNumOfBands) && !Validation.GetHasError(TbGain) && !Validation.GetHasError(Tb3dBWidth) && !Validation.GetHasError(TbVSWR) && !Validation.GetHasError(TBEfficiency) && !Validation.GetHasError(TbCrossPolarization))
             {
                 ShowPanel(Panel.QueryResult);
 
@@ -243,6 +243,7 @@ namespace AntennaLibrary
                 query.Gain = QueryViewModel.Gain;
                 query._3dBWidth = QueryViewModel._3dBWidth;
                 query.VSWR = QueryViewModel.VSWR;
+                query.Efficiency = QueryViewModel.Efficiency;
                 query.CrossPolarization = QueryViewModel.CrossPolarization;
                 if (RbSingle.IsChecked != null && RbSingle.IsChecked.Value)
                 {

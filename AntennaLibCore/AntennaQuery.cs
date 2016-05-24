@@ -18,6 +18,8 @@ namespace AntennaLibCore
 
         public double? VSWR;
 
+        public double? Efficiency;
+
         public double? AxialRatio;
 
         public double? CrossPolarization;

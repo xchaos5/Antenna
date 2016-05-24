@@ -74,7 +74,7 @@
     <Content Include="Antennas\Pyramid Horn\E-X.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Antennas\Pyramid Horn\GAIN_FREQ.csv">
+    <Content Include="Antennas\Pyramid Horn\Gain_freq.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Antennas\Pyramid Horn\VSWR.csv">
@@ -83,24 +83,37 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Antennas\Circular Corrugated Horn\Gain_Theta.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Antennas\Cassegrain\farfield_Ka.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Antennas\Cassegrain\farfield_X.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="Antennas\Cassegrain\Gain_freq_10GHz.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Cassegrain\Gain_freq_35GHz.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Cassegrain\VSWR_10GHz.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Cassegrain\VSWR_35GHz.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Circular Corrugated Horn\farfield_H_E.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Circular Corrugated Horn\Gain_freq.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Antennas\Double Ridged Horn\E_H.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Antennas\Double Ridged Horn\E_X.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Antennas\Double Ridged Horn\Gain_Freq.csv">
+    <None Include="Antennas\Double Ridged Horn\Gain_freq.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

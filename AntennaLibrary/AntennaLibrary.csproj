@@ -62,7 +62,7 @@
     <Compile Include="AntennaDocuments.cs" />
     <Compile Include="ValidationRule.cs" />
     <Compile Include="ValueConverter.cs" />
-    <Compile Include="ViewModel.cs" />
+    <Compile Include="AntennaViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

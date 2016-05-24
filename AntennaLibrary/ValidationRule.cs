@@ -15,9 +15,9 @@ namespace AntennaLibrary
             if (!string.IsNullOrEmpty(value as string))
             {
                 int numOfBands;
-                if (!int.TryParse((string)value, out numOfBands) || numOfBands < 1 || numOfBands > 10)
+                if (!int.TryParse((string)value, out numOfBands) || numOfBands < 1 || numOfBands > 3)
                 {
-                    return new ValidationResult(false, "Number of bands must be between 1 and 10");
+                    return new ValidationResult(false, "Number of bands must be between 1 and 3");
                 }
             }
             return new ValidationResult(true, null);
@@ -66,6 +66,22 @@ namespace AntennaLibrary
                 if (!double.TryParse((string)value, out vswr) || vswr < 1)
                 {
                     return new ValidationResult(false, "VSWR must be no less than 1");
+                }
+            }
+            return new ValidationResult(true, null);
+        }
+    }
+
+    public class EfficiencyValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            if (!string.IsNullOrEmpty(value as string))
+            {
+                double efficiency;
+                if (!double.TryParse((string)value, out efficiency) || efficiency < 0 || efficiency > 100)
+                {
+                    return new ValidationResult(false, "Efficiency must be between 0 and 100");
                 }
             }
             return new ValidationResult(true, null);

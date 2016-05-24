@@ -186,7 +186,7 @@
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="Auto"></RowDefinition>
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10" Visibility="Collapsed">
                             <Label Content="Number of bands:" Width="108" Height="26" Margin="10,10,0,10" VerticalAlignment="Bottom"/>
                             <TextBox Name="TbNumOfBands"  Width="100" Height="20" TextChanged="TbNumOfBands_OnTextChanged">
                                 <Binding Path="QueryViewModel.NumOfBands" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
@@ -196,7 +196,7 @@
                                 </Binding>
                             </TextBox>
                         </StackPanel>
-                        <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1" Grid.Row="0" Grid.Column="0"></Border>
+                        <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1" Grid.Row="0" Grid.Column="0" Visibility="Collapsed"></Border>
                         <ItemsControl Grid.Row="1" x:Name="Bands" ItemsSource="{Binding Path=QueryViewModel.BandRanges}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -213,12 +213,12 @@
                                         </Grid.ColumnDefinitions>
                                         <Label Grid.Row="0" Grid.RowSpan="2" Margin="20,10,0,10">
                                             <Label.Content>
-                                                <TextBlock>
-                                                    <TextBlock.Text>
+                                                <TextBlock Text="Band">
+                                                    <!--<TextBlock.Text>
                                                         <MultiBinding StringFormat="Band {0}">
                                                             <Binding Path="No"></Binding>
                                                         </MultiBinding>
-                                                    </TextBlock.Text>
+                                                    </TextBlock.Text>-->
                                                 </TextBlock>
                                             </Label.Content>
                                         </Label>
@@ -295,7 +295,15 @@
                                 </TextBox.Text>
                             </TextBox>
                             <Label Grid.Row="3" Grid.Column="0" Margin="30,10,0,10">Efficiency &gt;</Label>
-                            <TextBox Grid.Row="3" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left"></TextBox>
+                            <TextBox Grid.Row="3" Grid.Column="1" Name="TBEfficiency" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left">
+                                <TextBox.Text>
+                                    <Binding Path="QueryViewModel.Efficiency" Mode="TwoWay" UpdateSourceTrigger="Default" TargetNullValue="">
+                                        <Binding.ValidationRules>
+                                            <local:EfficiencyValidationRule></local:EfficiencyValidationRule>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                             <Label Grid.Row="3" Grid.Column="2" Margin="0,10,0,10">%</Label>
                             <Label Grid.Row="4" Grid.Column="0" Margin="30,10,0,10">Polarization</Label>
                             <RadioButton Grid.Row="5" Grid.Column="0" Margin="30,10,0,10" x:Name="RbSingle" GroupName="SingleDual" IsChecked="True">Single</RadioButton>
@@ -378,7 +386,7 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Button Grid.Row="0" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" Width="32" Height="32" Margin="0" Click="BtnBack_OnClick">
+                <Button Grid.Row="0" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" Width="34" Height="34" Margin="0" Click="BtnBack_OnClick">
                     <Image Source="Back.png" Width="32" Height="32"/>
                 </Button>
                 <DocumentViewer Grid.Row="1" x:Name="DocumentViewer"></DocumentViewer>
@@ -487,7 +495,7 @@
         <Border Grid.Column="1" Grid.Row="1" Name="DimensionsPanel" BorderBrush="DarkGray" Style="{StaticResource FadeIn}" BorderThickness="1" Margin="5,0,0,0" Visibility="Collapsed">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical">
-                    <Button Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" Width="32" Height="32" Margin="0" Click="BtnBack_OnClick">
+                    <Button Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" Width="34" Height="34" Margin="0" Click="BtnBack_OnClick">
                         <Image Source="Back.png" Width="32" Height="32"/>
                     </Button>
                     <Image MaxWidth="480" Margin="8" Source="{Binding DimensionsImagePath}"></Image>

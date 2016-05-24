@@ -130,35 +130,62 @@ namespace AntennaLibCore
         }
     }
 
-    public class CrossPolarizationMap
+    public class FreqGainMap
     {
-        public IList<KeyValuePair<double, double>> Phi0Gains { get; set; } = new List<KeyValuePair<double, double>>();
+        public Frequency Freq { get; set; }
 
-        public IList<KeyValuePair<double, double>> Phi90Gains { get; set; } = new List<KeyValuePair<double, double>>();
+        public IList<KeyValuePair<double, double>> Map { get; set; } = new List<KeyValuePair<double, double>>();
 
         public void LoadFromFile(string fileName)
         {
-            var thetaGainMap = Utils.LoadThetaGainMapFromFile(fileName);
-            foreach (var pair in thetaGainMap)
-            {
-                Phi0Gains.Add(new KeyValuePair<double, double>(pair.Key, pair.Value.Item1));
-                Phi90Gains.Add(new KeyValuePair<double, double>(pair.Key, pair.Value.Item2));
-            }
+            Map = Utils.LoadFreqGainMapFromFile(fileName);
         }
 
-        private double? _maxGain;
-        public double MaxGain
+        private double? _bandWidth;
+        public double BandWidth
         {
             get
             {
-                if (_maxGain == null)
+                if (_bandWidth == null)
                 {
-                    _maxGain = Phi0Gains.Max(x => x.Value);
+                    double f_max = Map.Max(x => x.Key);
+                    double f_min = Map.Min(x => x.Key);
+                    _bandWidth = f_max == f_min ? 0 : (f_max + f_min) / 2 / (f_max - f_min);
                 }
-                return _maxGain.Value;
+                return _bandWidth.Value;
             }
         }
     }
+
+    //public class CrossPolarizationMap
+    //{
+    //    public IList<KeyValuePair<double, double>> Phi0Gains { get; set; } = new List<KeyValuePair<double, double>>();
+
+    //    public IList<KeyValuePair<double, double>> Phi90Gains { get; set; } = new List<KeyValuePair<double, double>>();
+
+    //    public void LoadFromFile(string fileName)
+    //    {
+    //        var thetaGainMap = Utils.LoadThetaGainMapFromFile(fileName);
+    //        foreach (var pair in thetaGainMap)
+    //        {
+    //            Phi0Gains.Add(new KeyValuePair<double, double>(pair.Key, pair.Value.Item1));
+    //            Phi90Gains.Add(new KeyValuePair<double, double>(pair.Key, pair.Value.Item2));
+    //        }
+    //    }
+
+    //    private double? _maxGain;
+    //    public double MaxGain
+    //    {
+    //        get
+    //        {
+    //            if (_maxGain == null)
+    //            {
+    //                _maxGain = Phi0Gains.Max(x => x.Value);
+    //            }
+    //            return _maxGain.Value;
+    //        }
+    //    }
+    //}
 
     public class Antenna
     {
@@ -176,21 +203,23 @@ namespace AntennaLibCore
 
         public IList<ThetaGainMap> ThetaGainMaps { get; set; }
 
-        public IList<KeyValuePair<double, double>> FreqGainMap { get; set; }
+        public IList<ThetaGainMap> CrossPolarizationMaps { get; set; }
 
-        public IList<KeyValuePair<double, double>> VSWRMap { get; set; }
+        public IList<FreqGainMap> FreqGainMaps { get; set; }
 
-        public CrossPolarizationMap CrossPolarizationMap { get; set; }
+        public IList<FreqGainMap> VSWRMaps { get; set; }
 
         public IList<KeyValuePair<string, double>> Dimensions { get; set; }
+
+        public double? Efficiency { get; set; }
 
         public string Gain
         {
             get
             {
-                if (FreqGainMap != null)
+                if (FreqGainMaps != null && FreqGainMaps.Count > 0)
                 {
-                    return (int)FreqGainMap.Max(x => x.Value) + "dBi";
+                    return (int)FreqGainMaps[0].Map.Max(x => x.Value) + "dBi";
                 }
                 if (ThetaGainMaps != null && ThetaGainMaps.Count > 0)
                 {
@@ -216,9 +245,9 @@ namespace AntennaLibCore
         {
             get
             {
-                if (VSWRMap != null)
+                if (VSWRMaps != null && VSWRMaps.Count > 0)
                 {
-                    return Math.Round(VSWRMap.Max(x => x.Value), 1).ToString();
+                    return Math.Round(VSWRMaps[0].Map.Max(x => x.Value), 1).ToString();
                 }
                 return string.Empty;
             }
@@ -228,13 +257,21 @@ namespace AntennaLibCore
         {
             get
             {
-                if (CrossPolarizationMap != null)
+                if (CrossPolarizationMaps != null && CrossPolarizationMaps.Count > 0)
                 {
-                    return (int)CrossPolarizationMap.MaxGain + "dB";
+                    return (int)CrossPolarizationMaps[0].MaxGain + "dB";
                 }
                 return string.Empty;
             }
         }
+
+        //public double BandWidth
+        //{
+        //    get
+        //    {
+
+        //    }
+        //}
 
         public MatchResult Match(AntennaQuery query)
         {
@@ -251,19 +288,19 @@ namespace AntennaLibCore
                 // Gain
                 if (query.Gain != null)
                 {
-                    if (FreqGainMap != null && FreqGainMap.Count > 0)
+                    if (FreqGainMaps != null && FreqGainMaps.Count > 0)
                     {
-                        if (GetMaxGainByFreq(f0) < query.Gain.Value)
-                        {
-                            return result;
-                        }
+                        //if (GetMaxGainByFreq(f0) < query.Gain.Value)
+                        //{
+                        //    return result;
+                        //}
 
                         // Marginal gain
-                        if (GetMaxGainByFreq(querybandRange.LowerBound.NormalizedFreq) < query.Gain.Value || GetMaxGainByFreq(querybandRange.UpperBound.NormalizedFreq) < query.Gain.Value)
-                        {
-                            result.IsMarginMatch = false;
-                            return result;
-                        }
+                        //if (GetMaxGainByFreq(querybandRange.LowerBound.NormalizedFreq) < query.Gain.Value || GetMaxGainByFreq(querybandRange.UpperBound.NormalizedFreq) < query.Gain.Value)
+                        //{
+                        //    result.IsMarginMatch = false;
+                        //    return result;
+                        //}
                     }
                     else if (thetaGainMap != null && thetaGainMap.MaxGain < query.Gain.Value)
                     {
@@ -279,14 +316,14 @@ namespace AntennaLibCore
                 }
 
                 // VSWR
-                if (query.VSWR != null && VSWRMap != null)
-                {
-                    var vswr = GetVSWRByFreq(f0);
-                    if (vswr > query.VSWR.Value * 1.1)
-                    {
-                        return result;
-                    }
-                }
+                //if (query.VSWR != null && VSWRMaps != null)
+                //{
+                //    var vswr = GetVSWRByFreq(f0);
+                //    if (vswr > query.VSWR.Value * 1.1)
+                //    {
+                //        return result;
+                //    }
+                //}
             }
 
             // Polarization
@@ -302,11 +339,15 @@ namespace AntennaLibCore
             }
 
             // Cross Polarization
-            if (query.CrossPolarization != null && CrossPolarizationMap != null && CrossPolarizationMap.MaxGain < query.CrossPolarization.Value)
+            if (query.CrossPolarization != null && CrossPolarizationMaps != null && CrossPolarizationMaps[0].MaxGain < query.CrossPolarization.Value)
             {
                 return result;
             }
 
+            if (query.Efficiency != null && Efficiency != null && Efficiency < query.Efficiency)
+            {
+                return result;
+            }
             // TODO: Axial Ratio
 
 
@@ -336,42 +377,42 @@ namespace AntennaLibCore
             return closest;
         }
 
-        internal double GetMaxGainByFreq(double normalizedFreq)
-        {
-            var closest = FreqGainMap.First();
-            double freq = normalizedFreq / Frequency.G;
-            double minDistance = Math.Abs(FreqGainMap.First().Key - freq);
+        //internal double GetMaxGainByFreq(double normalizedFreq)
+        //{
+        //    var closest = FreqGainMap.First();
+        //    double freq = normalizedFreq / Frequency.G;
+        //    double minDistance = Math.Abs(FreqGainMap.First().Key - freq);
 
-            for (int i = 1; i < FreqGainMap.Count; i++)
-            {
-                var distance = Math.Abs(FreqGainMap[i].Key - freq);
-                if (distance < minDistance)
-                {
-                    minDistance = distance;
-                    closest = FreqGainMap[i];
-                }
-            }
+        //    for (int i = 1; i < FreqGainMap.Count; i++)
+        //    {
+        //        var distance = Math.Abs(FreqGainMap[i].Key - freq);
+        //        if (distance < minDistance)
+        //        {
+        //            minDistance = distance;
+        //            closest = FreqGainMap[i];
+        //        }
+        //    }
 
-            return closest.Value;
-        }
+        //    return closest.Value;
+        //}
 
-        internal double GetVSWRByFreq(double normalizedFreq)
-        {
-            var closest = VSWRMap.First();
-            double freq = normalizedFreq / Frequency.G;
-            double minDistance = Math.Abs(VSWRMap.First().Key - freq);
+        //internal double GetVSWRByFreq(double normalizedFreq)
+        //{
+        //    var closest = VSWRMap.First();
+        //    double freq = normalizedFreq / Frequency.G;
+        //    double minDistance = Math.Abs(VSWRMap.First().Key - freq);
 
-            for (int i = 1; i < VSWRMap.Count; i++)
-            {
-                var distance = Math.Abs(VSWRMap[i].Key - freq);
-                if (distance < minDistance)
-                {
-                    minDistance = distance;
-                    closest = VSWRMap[i];
-                }
-            }
+        //    for (int i = 1; i < VSWRMap.Count; i++)
+        //    {
+        //        var distance = Math.Abs(VSWRMap[i].Key - freq);
+        //        if (distance < minDistance)
+        //        {
+        //            minDistance = distance;
+        //            closest = VSWRMap[i];
+        //        }
+        //    }
 
-            return closest.Value;
-        }
+        //    return closest.Value;
+        //}
     }
 }

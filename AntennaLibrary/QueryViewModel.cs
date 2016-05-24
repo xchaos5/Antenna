@@ -49,7 +49,6 @@ namespace AntennaLibrary
         public ObservableCollection<BandRange> BandRanges { get; set; } = new ObservableCollection<BandRange>();
 
         private double? _gain;
-
         public double? Gain
         {
             get { return _gain; }
@@ -72,7 +71,6 @@ namespace AntennaLibrary
         }
 
         private double? _VSWR;
-
         public double? VSWR
         {
             get { return _VSWR; }
@@ -83,12 +81,20 @@ namespace AntennaLibrary
             }
         }
 
-        public double? Efficiency;
+        private double? _Efficiency;
+        public double? Efficiency
+        {
+            get { return _Efficiency; }
+            set
+            {
+                _Efficiency = value;
+                OnPropertyChanged();
+            }
+        }
 
         public double? AxialRatio;
 
         private double? _CrossPolarization;
-
         public double? CrossPolarization
         {
             get { return _CrossPolarization; }
