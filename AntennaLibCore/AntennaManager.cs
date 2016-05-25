@@ -58,8 +58,8 @@ namespace AntennaLibCore
             if (results.Count > 0)
             {
                 queryResult.HasResult = true;
-                queryResult.BestMatch = results.First().Antenna;
-                queryResult.OtherMatches = results.Skip(1).Select(x => x.Antenna).ToList();
+                queryResult.BestMatch = results.First();
+                queryResult.OtherMatches = results.Skip(1).ToList();
             }
 
             return queryResult;

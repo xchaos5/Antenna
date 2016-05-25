@@ -31,6 +31,8 @@ namespace AntennaLibCore
 
         public bool IsMarginMatch = true;
 
+        public double Scale { get; set; }
+
         public Antenna Antenna { get; private set; }
 
         public MatchResult(Antenna antenna)
@@ -43,8 +45,8 @@ namespace AntennaLibCore
     {
         public bool HasResult { get; set; }
 
-        public Antenna BestMatch { get; set; }
+        public MatchResult BestMatch { get; set; }
 
-        public IList<Antenna> OtherMatches { get; set; }
+        public IList<MatchResult> OtherMatches { get; set; }
     }
 }

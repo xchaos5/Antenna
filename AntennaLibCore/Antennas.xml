@@ -5,10 +5,6 @@
 		<Document>Antennas/Cassegrain.xps</Document>
 		<Image>Antennas/Images/Cassegrain.png</Image>
 		<DimensionsImage>Antennas/Images/Cassegrain_Dimensions.png</DimensionsImage>
-		<MinFreq>8</MinFreq>
-		<MinFreqUnit>GHz</MinFreqUnit>
-		<MaxFreq>120</MaxFreq>
-		<MaxFreqUnit>GHz</MaxFreqUnit>
 		<Tags>reflector,parabolic,hyperbolic,high gain,narrow beam,linear polarization,circular polarization,directional,wideband,single band</Tags>
 		<ThetaGainMaps>
 			<ThetaGainMap>
@@ -118,10 +114,6 @@
 		<Document>Antennas/Double Ridged Horn.xps</Document>
 		<Image>Antennas/Images/Double Ridged Horn.png</Image>
 		<DimensionsImage>Antennas/Images/Double_Ridged_Horn_Dimensions.png</DimensionsImage>
-		<MinFreq>1</MinFreq>
-		<MinFreqUnit>GHz</MinFreqUnit>
-		<MaxFreq>40</MaxFreq>
-		<MaxFreqUnit>GHz</MaxFreqUnit>
 		<Tags>horn,linear polarization,directional,UWB,single band</Tags>
 		<ThetaGainMaps>
 			<ThetaGainMap>
@@ -192,10 +184,6 @@
 		<Document>Antennas/Aperture Coupled Patch.xps</Document>
 		<Image>Antennas/Images/Aperture Coupled Patch.png</Image>
 		<DimensionsImage>Antennas/Images/Aperture_Coupled_Patch_Dimensions.png</DimensionsImage>
-		<MinFreq>320</MinFreq>
-		<MinFreqUnit>MHz</MinFreqUnit>
-		<MaxFreq>22</MaxFreq>
-		<MaxFreqUnit>GHz</MaxFreqUnit>
 		<Tags>patch,wideband,directional,linear polarization,single band</Tags>
 		<ThetaGainMaps>
 			<ThetaGainMap>
@@ -269,10 +257,6 @@
 		<Document>Antennas/Circular Corrugated Horn.xps</Document>
 		<Image>Antennas/Images/Circular Corrugated Horn.png</Image>
 		<DimensionsImage>Antennas/Images/Circular_Corrugated_Horn_Dimensions.png</DimensionsImage>
-		<MinFreq>8</MinFreq>
-		<MinFreqUnit>GHz</MinFreqUnit>
-		<MaxFreq>75</MaxFreq>
-		<MaxFreqUnit>GHZ</MaxFreqUnit>
 		<Tags>horn,wideband,single band,directional,linear polarization</Tags>
 		<ThetaGainMaps>
 			<ThetaGainMap>
@@ -351,14 +335,6 @@
 		<Document>Antennas/Pyramid Horn.xps</Document>
 		<Image>Antennas/Images/Pyramid Horn.png</Image>
 		<DimensionsImage>Antennas/Images/Pyramid_Horn_Dimensions.png</DimensionsImage>
-		<fMax>330</fMax>
-		<fMaxUnit>GHz</fMaxUnit>
-		<fMin>320</fMin>
-		<fMinUnit>MHz</fMinUnit>
-		<MinFreq>8</MinFreq>
-		<MinFreqUnit>GHz</MinFreqUnit>
-		<MaxFreq>75</MaxFreq>
-		<MaxFreqUnit>GHZ</MaxFreqUnit>
 		<Tags>horn,wideband,single band,high gain,directional,linear polarization</Tags>
 		<ThetaGainMaps>
 			<ThetaGainMap>

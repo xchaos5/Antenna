@@ -138,4 +138,20 @@ namespace AntennaLibrary
             throw new NotImplementedException();
         }
     }
+
+    public class DimensionScaleConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            double original = 0.0, scale = 0.0;
+            double.TryParse(values[0].ToString(), out original);
+            double.TryParse(values[1].ToString(), out scale);
+            return (Math.Round(original * scale, 2)).ToString();
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>App.ico</ApplicationIcon>
+    <ApplicationIcon>AntCal.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ReachFramework" />
@@ -93,11 +93,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Splash.png" />
     <Resource Include="Back.png" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="AntCal.ico" />
     <Resource Include="Antenna.png" />
     <Content Include="AntennaDocuments.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -142,16 +144,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Antenna.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\AntennaLibCore\AntennaLibCore.csproj">
       <Project>{c2efc9f3-25aa-4e76-9c69-72c785bdffe7}</Project>
       <Name>AntennaLibCore</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="App.ico" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Antennas\Images\Aperture Coupled Patch.png">

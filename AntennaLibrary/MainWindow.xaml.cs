@@ -179,18 +179,6 @@ namespace AntennaLibrary
             }
         }
 
-        private void DirectoryTreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            var file = e.NewValue as FileInfo;
-            if (null != file)
-            {
-                var xpsDoc = new XpsDocument(file.FullName, FileAccess.Read);
-                DocumentViewer.Document = xpsDoc.GetFixedDocumentSequence();
-
-                ShowPanel(Panel.Document);
-            }
-        }
-
         private void TbNumOfBands_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             if (string.IsNullOrEmpty(TbNumOfBands.Text))
@@ -222,13 +210,17 @@ namespace AntennaLibrary
         {
             var element = e.Source as FrameworkElement;
             var antennaViewModel = element.DataContext as AntennaViewModel;
-            var file = new FileInfo(antennaViewModel.Antenna.DocumentPath);
-            if (null != file)
+            if (antennaViewModel != null)
             {
-                var xpsDoc = new XpsDocument(file.FullName, FileAccess.Read);
-                DocumentViewer.Document = xpsDoc.GetFixedDocumentSequence();
+                TbDocumentTitle.Text = antennaViewModel.Antenna.Name;
+                var file = new FileInfo(antennaViewModel.Antenna.DocumentPath);
+                if (file != null)
+                {
+                    var xpsDoc = new XpsDocument(file.FullName, FileAccess.Read);
+                    DocumentViewer.Document = xpsDoc.GetFixedDocumentSequence();
 
-                ShowPanel(Panel.Document);
+                    ShowPanel(Panel.Document);
+                }
             }
         }
 
@@ -277,7 +269,7 @@ namespace AntennaLibrary
                 var antenna = element.DataContext as QueryResult;
                 DimensionsPanel.DataContext = antenna.BestMatch;
             }
-            if (element.DataContext is Antenna)
+            if (element.DataContext is MatchResult)
             {
                 DimensionsPanel.DataContext = element.DataContext;
             }
@@ -309,6 +301,7 @@ namespace AntennaLibrary
                 var antennaDocument = textBlcok.DataContext as AntennaDocument;
                 if (null != antennaDocument)
                 {
+                    TbDocumentTitle.Text = antennaDocument.Name;
                     var file = new FileInfo(antennaDocument.Document);
                     var xpsDoc = new XpsDocument(file.FullName, FileAccess.Read);
                     DocumentViewer.Document = xpsDoc.GetFixedDocumentSequence();

@@ -18,7 +18,7 @@ namespace AntennaLibrary
 
         protected override async void OnStartup(StartupEventArgs e)
         {
-            SplashScreen splash = new SplashScreen("Antenna.jpg");
+            SplashScreen splash = new SplashScreen("Splash.png");
             splash.Show(false);
 
             base.OnStartup(e);

@@ -108,28 +108,15 @@ namespace AntennaLibCore
                         Name = antennaElement.Element("Name").Value,
                         DocumentPath = antennaElement.Element("Document").Value,
                         ImagePath = antennaElement.Element("Image").Value,
-                        BandRange = new BandRange()
-                        {
-                            LowerBound = new Frequency()
-                            {
-                                Value = GetDoubleValue(antennaElement, "MinFreq"),
-                                Unit = GetFreqUnit(antennaElement, "MinFreqUnit"),
-                            },
-                            UpperBound = new Frequency()
-                            {
-                                Value = GetDoubleValue(antennaElement, "MaxFreq"),
-                                Unit = GetFreqUnit(antennaElement, "MaxFreqUnit"),
-                            },
-                        },
                         Tags = antennaElement.Element("Tags").Value.Split(',').ToList(),
                     };
 
                     if (antennaElement.Descendants("ThetaGainMap").Any())
                     {
-                        antenna.ThetaGainMaps = new List<ThetaGainMap>();
+                        antenna.ThetaGainMaps = new List<ThetaValueMap>();
                         foreach (var gainMapElement in antennaElement.Descendants("ThetaGainMap"))
                         {
-                            var thetaGainMap = new ThetaGainMap();
+                            var thetaGainMap = new ThetaValueMap();
                             thetaGainMap.LoadFromFile(gainMapElement.Element("FilePath").Value);
                             thetaGainMap.Freq = new Frequency()
                             {
@@ -143,10 +130,10 @@ namespace AntennaLibCore
 
                     if (antennaElement.Descendants("CrossPolarizationMap").Any())
                     {
-                        antenna.CrossPolarizationMaps = new List<ThetaGainMap>();
+                        antenna.CrossPolarizationMaps = new List<ThetaValueMap>();
                         foreach (var xpMapElement in antennaElement.Descendants("CrossPolarizationMap"))
                         {
-                            var xpMap = new ThetaGainMap();
+                            var xpMap = new ThetaValueMap();
                             xpMap.LoadFromFile(xpMapElement.Element("FilePath").Value);
                             xpMap.Freq = new Frequency()
                             {
@@ -160,10 +147,10 @@ namespace AntennaLibCore
 
                     if (antennaElement.Descendants("FreqGainMap").Any())
                     {
-                        antenna.FreqGainMaps = new List<FreqGainMap>();
+                        antenna.FreqGainMaps = new List<FreqValueMap>();
                         foreach (var fgMapElemeent in antennaElement.Descendants("FreqGainMap"))
                         {
-                            var fgMap = new FreqGainMap();
+                            var fgMap = new FreqValueMap();
                             fgMap.LoadFromFile(fgMapElemeent.Element("FilePath").Value);
                             fgMap.Freq = new Frequency()
                             {
@@ -177,10 +164,10 @@ namespace AntennaLibCore
 
                     if (antennaElement.Descendants("VSWRMap").Any())
                     {
-                        antenna.VSWRMaps = new List<FreqGainMap>();
+                        antenna.VSWRMaps = new List<FreqValueMap>();
                         foreach (var vswrMapElement in antennaElement.Descendants("VSWRMap"))
                         {
-                            var vswrMap = new FreqGainMap();
+                            var vswrMap = new FreqValueMap();
                             vswrMap.LoadFromFile(vswrMapElement.Element("FilePath").Value);
                             vswrMap.Freq = new Frequency()
                             {
