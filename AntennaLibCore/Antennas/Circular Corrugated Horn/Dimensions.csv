@@ -1,0 +1,13 @@
+Name,Value,Unit
+waveguide_D,23.2,mm
+waveguide_L,45,mm
+convert_H,15,mm
+convert_L,72,mm
+convert_n,186.1,mm
+P,6,mm
+W,3.6,
+d,2.4,mm
+radiation_H,7.5,mm
+radiation_L,216,mm
+radiation_n,36,°
+theta,13.2,°

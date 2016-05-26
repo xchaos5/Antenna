@@ -81,7 +81,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Antennas\Aperture Coupled Patch\Dimensions.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Antennas\Cassegrain\Dimensions_Ka.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -113,15 +117,28 @@
     <Content Include="Antennas\Circular Corrugated Horn\Gain_freq.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Antennas\Double Ridged Horn\E_H.csv">
+    <Content Include="Antennas\Double Ridged Horn\Dimensions.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Antennas\Double Ridged Horn\E_X.csv">
+    </Content>
+    <Content Include="Antennas\Double Ridged Horn\E_H.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Antennas\Double Ridged Horn\Gain_freq.csv">
+    </Content>
+    <Content Include="Antennas\Double Ridged Horn\E_X.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
+    <Content Include="Antennas\Double Ridged Horn\Gain_freq.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Antennas\Circular Corrugated Horn\Dimensions.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Antennas\Pyramid Horn\Dimensions.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

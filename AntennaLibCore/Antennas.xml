@@ -83,7 +83,11 @@
 			</CrossPolarizationMap>
 		</CrossPolarizationMaps>
 		<DimensionMaps>
-			
+			<DimensionMap>
+				<Freq>10</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Double Ridged Horn\Dimensions.csv</FilePath>
+			</DimensionMap>
 		</DimensionMaps>
 	</Antenna>
 	<Antenna>
@@ -121,7 +125,11 @@
 			</CrossPolarizationMap>
 		</CrossPolarizationMaps>
 		<DimensionMaps>
-			
+			<DimensionMap>
+				<Freq>20.5</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Aperture Coupled Patch\Dimensions.csv</FilePath>
+			</DimensionMap>
 		</DimensionMaps>
 	</Antenna>
 	<Antenna>
@@ -152,7 +160,11 @@
 			</VSWRMap>
 		</VSWRMaps>
 		<DimensionMaps>
-			
+			<DimensionMap>
+				<Freq>10</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Circular Corrugated Horn\Dimensions.csv</FilePath>
+			</DimensionMap>
 		</DimensionMaps>
 	</Antenna>
 	<Antenna>
@@ -190,7 +202,11 @@
 			</CrossPolarizationMap>
 		</CrossPolarizationMaps>
 		<DimensionMaps>
-			
+			<DimensionMap>
+				<Freq>8.75</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Pyramid Horn\Dimensions.csv</FilePath>
+			</DimensionMap>
 		</DimensionMaps>
 	</Antenna>
 </Antennas>

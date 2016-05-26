@@ -1,0 +1,11 @@
+Name,Value,Unit
+SQTH_waveguide_length,28.7,mm
+SQTH_taper_length,148.5,mm
+SQTH_taper_width,107.4,mm
+SQTH_taper_height,107.4,mm
+SQTH_waveguide_width,46.8,mm
+SQTH_waveguide_length,46.8,mm
+SQTH_cavity_height,5,mm
+SQTH_cavity_depth,26.7,mm
+SQTH_ridge_spacing,14,mm
+SQTH_coaxial_offset,8.6,mm
