@@ -212,6 +212,18 @@ namespace AntennaLibCore
         }
     }
 
+    public class DimensionMap
+    {
+        public Frequency Freq { get; set; }
+
+        public IList<KeyValuePair<string, Tuple<double, string>>> Map { get; set; } = new List<KeyValuePair<string, Tuple<double, string>>>();
+
+        public void LoadFromFile(string fileName)
+        {
+            Map = Utils.LoadDimensionMapFromFile(fileName);
+        }
+    }
+
     public class Antenna
     {
         public string Name { get; set; }
@@ -232,7 +244,7 @@ namespace AntennaLibCore
 
         public IList<FreqValueMap> VSWRMaps { get; set; }
 
-        public IList<KeyValuePair<string, double>> Dimensions { get; set; }
+        public IList<DimensionMap> DimensionMaps { get; set; }
 
         public double? Efficiency { get; set; }
 
@@ -291,6 +303,7 @@ namespace AntennaLibCore
         public MatchResult Match(AntennaQuery query)
         {
             var result = new MatchResult(this);
+            result.Dimensions = GetClosestDimensionMap(DimensionMaps, query.BandRanges[0].F0_Normalized);
             var freqValueMap = GetClosestFreqValueMap(VSWRMaps, query.BandRanges[0].F0_Normalized);
             if (freqValueMap == null)
             {
@@ -429,42 +442,25 @@ namespace AntennaLibCore
             return closest;
         }
 
-        //internal double GetMaxGainByFreq(double normalizedFreq)
-        //{
-        //    var closest = FreqGainMap.First();
-        //    double freq = normalizedFreq / Frequency.G;
-        //    double minDistance = Math.Abs(FreqGainMap.First().Key - freq);
+        internal DimensionMap GetClosestDimensionMap(IList<DimensionMap> maps, double normalizedFreq)
+        {
+            if (maps == null || maps.Count == 0)
+                return null;
 
-        //    for (int i = 1; i < FreqGainMap.Count; i++)
-        //    {
-        //        var distance = Math.Abs(FreqGainMap[i].Key - freq);
-        //        if (distance < minDistance)
-        //        {
-        //            minDistance = distance;
-        //            closest = FreqGainMap[i];
-        //        }
-        //    }
+            var closest = maps.First();
+            double freq = normalizedFreq;
+            double minDistance = Math.Abs(closest.Freq.NormalizedFreq - freq);
 
-        //    return closest.Value;
-        //}
-
-        //internal double GetVSWRByFreq(double normalizedFreq)
-        //{
-        //    var closest = VSWRMap.First();
-        //    double freq = normalizedFreq / Frequency.G;
-        //    double minDistance = Math.Abs(VSWRMap.First().Key - freq);
-
-        //    for (int i = 1; i < VSWRMap.Count; i++)
-        //    {
-        //        var distance = Math.Abs(VSWRMap[i].Key - freq);
-        //        if (distance < minDistance)
-        //        {
-        //            minDistance = distance;
-        //            closest = VSWRMap[i];
-        //        }
-        //    }
-
-        //    return closest.Value;
-        //}
+            for (int i = 1; i < maps.Count; i++)
+            {
+                var distance = Math.Abs(maps[i].Freq.NormalizedFreq - freq);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closest = maps[i];
+                }
+            }
+            return closest;
+        }
     }
 }

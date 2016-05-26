@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media.Imaging;
 using AntennaLibCore;
 
 namespace AntennaLibrary
@@ -150,6 +151,24 @@ namespace AntennaLibrary
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ImageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var uri = new Uri(Environment.CurrentDirectory + "/" + value, UriKind.Absolute);
+            var source = new BitmapImage();
+            source.BeginInit();
+            source.UriSource = uri;
+            source.EndInit();
+            return source;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

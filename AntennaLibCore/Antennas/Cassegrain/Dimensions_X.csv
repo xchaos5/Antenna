@@ -1,0 +1,9 @@
+Name,Value,Unit
+mainref_D,1000,mm
+mainref_F,400,mm
+subref_D,140,mm
+M,3.5,
+Theta1_Feed,20.2,°
+Theta2_Feed,64,°
+e,1.8,
+c,112,mm

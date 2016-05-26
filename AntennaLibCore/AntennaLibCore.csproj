@@ -83,12 +83,18 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Antennas\Cassegrain\farfield_Ka.csv">
+    <Content Include="Antennas\Cassegrain\Dimensions_Ka.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Antennas\Cassegrain\farfield_X.csv">
+    </Content>
+    <Content Include="Antennas\Cassegrain\Dimensions_X.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
+    <Content Include="Antennas\Cassegrain\farfield_Ka.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Antennas\Cassegrain\farfield_X.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Antennas\Cassegrain\Gain_freq_10GHz.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

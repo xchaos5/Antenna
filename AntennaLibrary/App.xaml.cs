@@ -26,7 +26,22 @@ namespace AntennaLibrary
             var init = Task.Run(() => mainWindow.Initialize());
 
             await Task.Delay(MINIMUM_SPLASH);
-            await init;
+            try
+            {
+                init.Wait();
+            }
+            catch (AggregateException ae)
+            {
+                string exception = "Initialization failed:" + Environment.NewLine;
+                foreach (var innerException in ae.InnerExceptions)
+                {
+                    exception += innerException.Message + Environment.NewLine;
+                }
+                MessageBox.Show(exception);
+                splash.Close(new TimeSpan(0));
+                mainWindow.Close();
+                return;
+            }
             mainWindow.Show();
             splash.Close(new TimeSpan(0));
         }

@@ -65,8 +65,6 @@ namespace AntennaLibrary
 
         public void Initialize()
         {
-            //Directory_Load();
-
             var antennas = Utils.LoadAntennasFromFile("Antennas.xml");
             foreach (var antenna in antennas)
             {
@@ -81,6 +79,7 @@ namespace AntennaLibrary
                     Antenna = antenna,
                     IsSelected = true,
                 };
+
                 antennaViewModels.Add(antennaViewModel);
             }
             AntennaViewModels = antennaViewModels;
@@ -133,23 +132,6 @@ namespace AntennaLibrary
                 }
                 antennaViewModel.IsSelected = selected;
             }
-        }
-
-        private void Directory_Load()
-        {
-            var directory = new ObservableCollection<DirectoryRecord>();
-
-            directory.Add(
-                new DirectoryRecord
-                {
-                    Info = new DirectoryInfo("Antennas")
-                }
-            );
-
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                AntennasTreeView.ItemsSource = directory;
-            }));
         }
 
         private void ShowPanel(Panel panel)

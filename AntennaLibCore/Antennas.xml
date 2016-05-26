@@ -42,72 +42,18 @@
 				<FilePath>Antennas\Cassegrain\VSWR_35GHz.csv</FilePath>
 			</VSWRMap>
 		</VSWRMaps>
-		<Dimensions>
-			<Dimension>
-				<Name>mainref_D(X)</Name>
-				<Value>1000</Value>
-			</Dimension>
-			<Dimension>
-				<Name>mainref_F(X)</Name>
-				<Value>400</Value>
-			</Dimension>
-			<Dimension>
-				<Name>subref_D(X)</Name>
-				<Value>140</Value>
-			</Dimension>
-			<Dimension>
-				<Name>M(X)</Name>
-				<Value>3.5</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Theta1_Feed(X)</Name>
-				<Value>20.2</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Theta2_Feed(X)</Name>
-				<Value>64</Value>
-			</Dimension>
-			<Dimension>
-				<Name>e(X)</Name>
-				<Value>1.8</Value>
-			</Dimension>
-			<Dimension>
-				<Name>c(X)</Name>
-				<Value>112</Value>
-			</Dimension>
-			<Dimension>
-				<Name>mainref_D(Ka)</Name>
-				<Value>1500</Value>
-			</Dimension>
-			<Dimension>
-				<Name>mainref_F(Ka)</Name>
-				<Value>570</Value>
-			</Dimension>
-			<Dimension>
-				<Name>subref_D(Ka)</Name>
-				<Value>160</Value>
-			</Dimension>
-			<Dimension>
-				<Name>M(X)</Name>
-				<Value>3</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Theta1_Feed(Ka)</Name>
-				<Value>25</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Theta2_Feed(Ka)</Name>
-				<Value>65</Value>
-			</Dimension>
-			<Dimension>
-				<Name>e(Ka)</Name>
-				<Value>2</Value>
-			</Dimension>
-			<Dimension>
-				<Name>c(Ka)</Name>
-				<Value>100</Value>
-			</Dimension>
-		</Dimensions>
+		<DimensionMaps>
+			<DimensionMap>
+				<Freq>10</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Cassegrain\Dimensions_X.csv</FilePath>
+			</DimensionMap>
+			<DimensionMap>
+				<Freq>35</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Cassegrain\Dimensions_Ka.csv</FilePath>
+			</DimensionMap>
+		</DimensionMaps>
 	</Antenna>
 	<Antenna>
 		<Name>Double Ridged Horn</Name>
@@ -136,48 +82,9 @@
 				<FilePath>Antennas\Double Ridged Horn\E_X.csv</FilePath>
 			</CrossPolarizationMap>
 		</CrossPolarizationMaps>
-		<Dimensions>
-			<Dimension>
-				<Name>SQTH_waveguide_length</Name>
-				<Value>28.7</Value>
-			</Dimension>
-			<Dimension>
-				<Name>SQTH_taper_length</Name>
-				<Value>148.5</Value>
-			</Dimension>
-			<Dimension>
-				<Name>SQTH_taper_width</Name>
-				<Value>107.4</Value>
-			</Dimension>
-			<Dimension>
-				<Name>SQTH_taper_height</Name>
-				<Value>107.4</Value>
-			</Dimension>
-			<Dimension>
-				<Name>SQTH_waveguide_width</Name>
-				<Value>46.8</Value>
-			</Dimension>
-			<Dimension>
-				<Name>SQTH_waveguide_length</Name>
-				<Value>46.8</Value>
-			</Dimension>
-			<Dimension>
-				<Name>SQTH_cavity_height</Name>
-				<Value>5</Value>
-			</Dimension>
-			<Dimension>
-				<Name>SQTH_cavity_depth</Name>
-				<Value>26.7</Value>
-			</Dimension>
-			<Dimension>
-				<Name>SQTH_ridge_spacing</Name>
-				<Value>14</Value>
-			</Dimension>
-			<Dimension>
-				<Name>SQTH_coaxial_offset</Name>
-				<Value>8.6</Value>
-			</Dimension>
-		</Dimensions>
+		<DimensionMaps>
+			
+		</DimensionMaps>
 	</Antenna>
 	<Antenna>
 		<Name>Aperture Coupled Patch</Name>
@@ -213,44 +120,9 @@
 				<FilePath>Antennas\Aperture Coupled Patch\farfield_H_and_E_x.csv</FilePath>
 			</CrossPolarizationMap>
 		</CrossPolarizationMaps>
-		<Dimensions>
-			<Dimension>
-				<Name>Radiation_Patch_a</Name>
-				<Value>4.4</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Sub_z1</Name>
-				<Value>2</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Sub_z2</Name>
-				<Value>1.3</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Feed_Slot_l</Name>
-				<Value>4.3</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Feed_Slot_w</Name>
-				<Value>0.2</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Feed_Branch_l</Name>
-				<Value>0.8</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Feed_microstrip_w</Name>
-				<Value>0.625</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Feed_a</Name>
-				<Value>14.4</Value>
-			</Dimension>
-			<Dimension>
-				<Name>Feed_b</Name>
-				<Value>11.4</Value>
-			</Dimension>
-		</Dimensions>
+		<DimensionMaps>
+			
+		</DimensionMaps>
 	</Antenna>
 	<Antenna>
 		<Name>Circular Corrugated Horn</Name>
@@ -260,7 +132,7 @@
 		<Tags>horn,wideband,single band,directional,linear polarization</Tags>
 		<ThetaGainMaps>
 			<ThetaGainMap>
-				<Freq>40</Freq>
+				<Freq>10</Freq>
 				<FreqUnit>GHz</FreqUnit>
 				<FilePath>Antennas\Circular Corrugated Horn\farfield_H_E.csv</FilePath>
 			</ThetaGainMap>
@@ -274,61 +146,14 @@
 		</FreqGainMaps>
 		<VSWRMaps>
 			<VSWRMap>
-				<Freq></Freq>
-				<FreqUnit></FreqUnit>
+				<Freq>10</Freq>
+				<FreqUnit>GHz</FreqUnit>
 				<FilePath>Antennas\Circular Corrugated Horn\VSWR.csv</FilePath>
 			</VSWRMap>
 		</VSWRMaps>
-		<Dimensions>
-			<Dimension>
-				<Name>waveguide_D</Name>
-				<Value>23.2</Value>
-			</Dimension>
-			<Dimension>
-				<Name>waveguide_L</Name>
-				<Value>45</Value>
-			</Dimension>
-			<Dimension>
-				<Name>convert_H</Name>
-				<Value>15</Value>
-			</Dimension>
-			<Dimension>
-				<Name>convert_L</Name>
-				<Value>72</Value>
-			</Dimension>
-			<Dimension>
-				<Name>convert_n</Name>
-				<Value>186.1</Value>
-			</Dimension>
-			<Dimension>
-				<Name>P</Name>
-				<Value>6</Value>
-			</Dimension>
-			<Dimension>
-				<Name>W</Name>
-				<Value>3.6</Value>
-			</Dimension>
-			<Dimension>
-				<Name>d</Name>
-				<Value>2.4</Value>
-			</Dimension>
-			<Dimension>
-				<Name>radiation_H</Name>
-				<Value>7.5</Value>
-			</Dimension>
-			<Dimension>
-				<Name>radiation_L</Name>
-				<Value>216</Value>
-			</Dimension>
-			<Dimension>
-				<Name>radiation_n</Name>
-				<Value>36</Value>
-			</Dimension>
-			<Dimension>
-				<Name>theta</Name>
-				<Value>13.2</Value>
-			</Dimension>
-		</Dimensions>
+		<DimensionMaps>
+			
+		</DimensionMaps>
 	</Antenna>
 	<Antenna>
 		<Name>Pyramid Horn</Name>
@@ -364,35 +189,8 @@
 				<FilePath>Antennas\Pyramid Horn\E-X.csv</FilePath>
 			</CrossPolarizationMap>
 		</CrossPolarizationMaps>
-		<Dimensions>
-			<Dimension>
-				<Name>1 waveguide_b</Name>
-				<Value>10.16</Value>
-			</Dimension>
-			<Dimension>
-				<Name>2 waveguide_a</Name>
-				<Value>22.86</Value>
-			</Dimension>
-			<Dimension>
-				<Name>3 waveguide_length</Name>
-				<Value>30</Value>
-			</Dimension>
-			<Dimension>
-				<Name>4 Taper_b</Name>
-				<Value>147.5</Value>
-			</Dimension>
-			<Dimension>
-				<Name>5 taper_a</Name>
-				<Value>186.1</Value>
-			</Dimension>
-			<Dimension>
-				<Name>6 taper_length</Name>
-				<Value>295.3</Value>
-			</Dimension>
-			<Dimension>
-				<Name>waveguide_thickness</Name>
-				<Value>1.5</Value>
-			</Dimension>
-		</Dimensions>
+		<DimensionMaps>
+			
+		</DimensionMaps>
 	</Antenna>
 </Antennas>

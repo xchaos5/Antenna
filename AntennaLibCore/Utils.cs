@@ -95,120 +95,136 @@ namespace AntennaLibCore
             return listVSWR.OrderBy(x => x.Key).ToList();
         }
 
+        public static IList<KeyValuePair<string, Tuple<double, string>>> LoadDimensionMapFromFile(string fileName)
+        {
+            var listDimensions = new List<KeyValuePair<string, Tuple<double, string>>>();
+            using (var reader = new StreamReader(fileName))
+            {
+                string line = reader.ReadLine();    // skip first line
+                while (null != (line = reader.ReadLine()))
+                {
+                    var vals = line.Split(',');
+                    string name = vals[0];
+                    double value = double.Parse(vals[1]);
+                    string unit = vals[2];
+                    listDimensions.Add(new KeyValuePair<string, Tuple<double, string>>(name, new Tuple<double, string>(value, unit)));
+                }
+            }
+            return listDimensions;
+        }
+
         public static IEnumerable<Antenna> LoadAntennasFromFile(string fileName)
         {
-            try
+            var antennas = new List<Antenna>();
+            var xDoc = XDocument.Load(fileName);
+            foreach (var antennaElement in xDoc.Descendants("Antenna"))
             {
-                var antennas = new List<Antenna>();
-                var xDoc = XDocument.Load(fileName);
-                foreach (var antennaElement in xDoc.Descendants("Antenna"))
+                var antenna = new Antenna
                 {
-                    var antenna = new Antenna
-                    {
-                        Name = antennaElement.Element("Name").Value,
-                        DocumentPath = antennaElement.Element("Document").Value,
-                        ImagePath = antennaElement.Element("Image").Value,
-                        Tags = antennaElement.Element("Tags").Value.Split(',').ToList(),
-                    };
+                    Name = antennaElement.Element("Name").Value,
+                    DocumentPath = antennaElement.Element("Document").Value,
+                    ImagePath = antennaElement.Element("Image").Value,
+                    Tags = antennaElement.Element("Tags").Value.Split(',').ToList(),
+                };
 
-                    if (antennaElement.Descendants("ThetaGainMap").Any())
+                if (antennaElement.Descendants("ThetaGainMap").Any())
+                {
+                    antenna.ThetaGainMaps = new List<ThetaValueMap>();
+                    foreach (var gainMapElement in antennaElement.Descendants("ThetaGainMap"))
                     {
-                        antenna.ThetaGainMaps = new List<ThetaValueMap>();
-                        foreach (var gainMapElement in antennaElement.Descendants("ThetaGainMap"))
+                        var thetaGainMap = new ThetaValueMap();
+                        thetaGainMap.LoadFromFile(gainMapElement.Element("FilePath").Value);
+                        thetaGainMap.Freq = new Frequency()
                         {
-                            var thetaGainMap = new ThetaValueMap();
-                            thetaGainMap.LoadFromFile(gainMapElement.Element("FilePath").Value);
-                            thetaGainMap.Freq = new Frequency()
-                            {
-                                Value = GetDoubleValue(gainMapElement, "Freq"),
-                                Unit = GetFreqUnit(gainMapElement, "FreqUnit"),
-                            };
-                            antenna.ThetaGainMaps.Add(thetaGainMap);
-                        }
-                        antenna.ThetaGainMaps.OrderBy(x => x.Freq.NormalizedFreq);
+                            Value = GetDoubleValue(gainMapElement, "Freq"),
+                            Unit = GetFreqUnit(gainMapElement, "FreqUnit"),
+                        };
+                        antenna.ThetaGainMaps.Add(thetaGainMap);
                     }
-
-                    if (antennaElement.Descendants("CrossPolarizationMap").Any())
-                    {
-                        antenna.CrossPolarizationMaps = new List<ThetaValueMap>();
-                        foreach (var xpMapElement in antennaElement.Descendants("CrossPolarizationMap"))
-                        {
-                            var xpMap = new ThetaValueMap();
-                            xpMap.LoadFromFile(xpMapElement.Element("FilePath").Value);
-                            xpMap.Freq = new Frequency()
-                            {
-                                Value = GetDoubleValue(xpMapElement, "Freq"),
-                                Unit = GetFreqUnit(xpMapElement, "FreqUnit"),
-                            };
-                            antenna.CrossPolarizationMaps.Add(xpMap);
-                        }
-                        antenna.CrossPolarizationMaps.OrderBy(x => x.Freq.NormalizedFreq);
-                    }
-
-                    if (antennaElement.Descendants("FreqGainMap").Any())
-                    {
-                        antenna.FreqGainMaps = new List<FreqValueMap>();
-                        foreach (var fgMapElemeent in antennaElement.Descendants("FreqGainMap"))
-                        {
-                            var fgMap = new FreqValueMap();
-                            fgMap.LoadFromFile(fgMapElemeent.Element("FilePath").Value);
-                            fgMap.Freq = new Frequency()
-                            {
-                                Value = GetDoubleValue(fgMapElemeent, "Freq"),
-                                Unit = GetFreqUnit(fgMapElemeent, "FreqUnit"),
-                            };
-                            antenna.FreqGainMaps.Add(fgMap);
-                        }
-                        antenna.FreqGainMaps.OrderBy(x => x.Freq.NormalizedFreq);
-                    }
-
-                    if (antennaElement.Descendants("VSWRMap").Any())
-                    {
-                        antenna.VSWRMaps = new List<FreqValueMap>();
-                        foreach (var vswrMapElement in antennaElement.Descendants("VSWRMap"))
-                        {
-                            var vswrMap = new FreqValueMap();
-                            vswrMap.LoadFromFile(vswrMapElement.Element("FilePath").Value);
-                            vswrMap.Freq = new Frequency()
-                            {
-                                Value = GetDoubleValue(vswrMapElement, "Freq"),
-                                Unit = GetFreqUnit(vswrMapElement, "FreqUnit"),
-                            };
-                            antenna.VSWRMaps.Add(vswrMap);
-                        }
-                        antenna.VSWRMaps.OrderBy(x => x.Freq.NormalizedFreq);
-                    }
-
-                    if (antennaElement.Descendants("DimensionsImage").Any())
-                    {
-                        antenna.DimensionsImagePath = antennaElement.Element("DimensionsImage").Value;
-                    }
-
-                    if (antennaElement.Descendants("Dimension").Any())
-                    {
-                        antenna.Dimensions = new List<KeyValuePair<string, double>>();
-                        foreach (var dim in antennaElement.Descendants("Dimension"))
-                        {
-                            string dimName = dim.Element("Name").Value;
-                            double dimValue = GetDoubleValue(dim, "Value");
-                            antenna.Dimensions.Add(new KeyValuePair<string, double>(dimName, dimValue));
-                        }
-                    }
-
-                    if (antennaElement.Descendants("Efficiency").Any())
-                    {
-                        antenna.Efficiency = GetDoubleValue(antennaElement, "Efficiency");
-                    }
-
-                    antennas.Add(antenna);
+                    antenna.ThetaGainMaps.OrderBy(x => x.Freq.NormalizedFreq);
                 }
-                return antennas;
+
+                if (antennaElement.Descendants("CrossPolarizationMap").Any())
+                {
+                    antenna.CrossPolarizationMaps = new List<ThetaValueMap>();
+                    foreach (var xpMapElement in antennaElement.Descendants("CrossPolarizationMap"))
+                    {
+                        var xpMap = new ThetaValueMap();
+                        xpMap.LoadFromFile(xpMapElement.Element("FilePath").Value);
+                        xpMap.Freq = new Frequency()
+                        {
+                            Value = GetDoubleValue(xpMapElement, "Freq"),
+                            Unit = GetFreqUnit(xpMapElement, "FreqUnit"),
+                        };
+                        antenna.CrossPolarizationMaps.Add(xpMap);
+                    }
+                    antenna.CrossPolarizationMaps.OrderBy(x => x.Freq.NormalizedFreq);
+                }
+
+                if (antennaElement.Descendants("FreqGainMap").Any())
+                {
+                    antenna.FreqGainMaps = new List<FreqValueMap>();
+                    foreach (var fgMapElemeent in antennaElement.Descendants("FreqGainMap"))
+                    {
+                        var fgMap = new FreqValueMap();
+                        fgMap.LoadFromFile(fgMapElemeent.Element("FilePath").Value);
+                        fgMap.Freq = new Frequency()
+                        {
+                            Value = GetDoubleValue(fgMapElemeent, "Freq"),
+                            Unit = GetFreqUnit(fgMapElemeent, "FreqUnit"),
+                        };
+                        antenna.FreqGainMaps.Add(fgMap);
+                    }
+                    antenna.FreqGainMaps.OrderBy(x => x.Freq.NormalizedFreq);
+                }
+
+                if (antennaElement.Descendants("VSWRMap").Any())
+                {
+                    antenna.VSWRMaps = new List<FreqValueMap>();
+                    foreach (var vswrMapElement in antennaElement.Descendants("VSWRMap"))
+                    {
+                        var vswrMap = new FreqValueMap();
+                        vswrMap.LoadFromFile(vswrMapElement.Element("FilePath").Value);
+                        vswrMap.Freq = new Frequency()
+                        {
+                            Value = GetDoubleValue(vswrMapElement, "Freq"),
+                            Unit = GetFreqUnit(vswrMapElement, "FreqUnit"),
+                        };
+                        antenna.VSWRMaps.Add(vswrMap);
+                    }
+                    antenna.VSWRMaps.OrderBy(x => x.Freq.NormalizedFreq);
+                }
+
+                if (antennaElement.Descendants("DimensionsImage").Any())
+                {
+                    antenna.DimensionsImagePath = antennaElement.Element("DimensionsImage").Value;
+                }
+
+                if (antennaElement.Descendants("DimensionMap").Any())
+                {
+                    antenna.DimensionMaps = new List<DimensionMap>();
+                    foreach (var dimMapElement in antennaElement.Descendants("DimensionMap"))
+                    {
+                        var dimensionMap = new DimensionMap();
+                        dimensionMap.LoadFromFile(dimMapElement.Element("FilePath").Value);
+                        dimensionMap.Freq = new Frequency()
+                        {
+                            Value = GetDoubleValue(dimMapElement, "Freq"),
+                            Unit = GetFreqUnit(dimMapElement, "FreqUnit"),
+                        };
+                        antenna.DimensionMaps.Add(dimensionMap);
+                    }
+                    antenna.DimensionMaps.OrderBy(x => x.Freq.NormalizedFreq);
+                }
+
+                if (antennaElement.Descendants("Efficiency").Any())
+                {
+                    antenna.Efficiency = GetDoubleValue(antennaElement, "Efficiency");
+                }
+
+                antennas.Add(antenna);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
+            return antennas;
         }
     }
 }

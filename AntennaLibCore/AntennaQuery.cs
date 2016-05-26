@@ -31,6 +31,8 @@ namespace AntennaLibCore
 
         public bool IsMarginMatch = true;
 
+        public DimensionMap Dimensions { get; set; }
+
         public double Scale { get; set; }
 
         public Antenna Antenna { get; private set; }

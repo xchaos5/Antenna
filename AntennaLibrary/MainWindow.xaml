@@ -6,12 +6,13 @@
         xmlns:local="clr-namespace:AntennaLibrary"
         xmlns:io="clr-namespace:System.IO;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Antenna Library" Height="960" Width="1280" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        Title="SciAntific" MinHeight="600" MinWidth="800" Height="960" Width="1280" ResizeMode="CanResize"  WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <local:BoolToOppositeVisibilityConverter x:Key="BoolToOppositeVisibilityConverter" />
         <local:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
         <local:DimensionScaleConverter x:Key="DimensionScaleConverter" />
+        <local:ImageConverter x:Key="ImageConverter"></local:ImageConverter>
         <local:FileNameWithoutExtensionConverter x:Key="FileNameWithoutExtensionConverter"/>
         <local:FreqUnitConverter x:Key="FreqUnitConverter"></local:FreqUnitConverter>
         <ControlTemplate x:Key="ErrorTemplate">
@@ -337,13 +338,17 @@
         </TabControl>
 
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="DarkGray" BorderThickness="1" Name="AntennasPanel" Margin="5,0,0,0" Style="{StaticResource FadeIn}">
-            <StackPanel Orientation="Vertical">
-                <Border BorderBrush="DarkGray" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" BorderBrush="DarkGray" BorderThickness="0,0,0,1">
                     <Grid Background="LightGray">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="40"></ColumnDefinition>
+                            <ColumnDefinition Width="30"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Margin="2" VerticalAlignment="Center">Tags</Label>
                         <ItemsControl Grid.Column="1" x:Name="TagsPanel" Width="Auto">
@@ -365,7 +370,8 @@
                         </Button>
                     </Grid>
                 </Border>
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="AntennasControl">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -375,8 +381,12 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical">
-                                    <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="16,16,16,0" Width="283" Height="210">
-                                        <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=Antenna.ImagePath}" Opacity="{Binding Path=IsSelected, Converter={StaticResource BoolToOpacityConverter}}" MouseDown="AntennasViewItem_OnMouseDown"></Image>
+                                    <Border BorderBrush="DarkCyan" BorderThickness="2" Margin="16,16,16,0" Width="283" Height="210" IsEnabled="{Binding Path=IsSelected}">
+                                        <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=Antenna.ImagePath, Converter={StaticResource ImageConverter}}" Opacity="{Binding Path=IsSelected, Converter={StaticResource BoolToOpacityConverter}}" MouseDown="AntennasViewItem_OnMouseDown">
+                                            <!--<Image.Source>
+                                                <Binding Path="AntennaImage" />
+                                            </Image.Source>-->
+                                        </Image>
                                     </Border>
                                     <TextBlock Text="{Binding Path=Antenna.Name}" HorizontalAlignment="Center"></TextBlock>
                                 </StackPanel>
@@ -384,7 +394,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
-            </StackPanel>
+            </Grid>
         </Border>
 
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="DarkGray" BorderThickness="1" Name="DocumentPanel" Margin="5,0,0,0" Style="{StaticResource FadeIn}">
@@ -395,7 +405,7 @@
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0">
                     <Button DockPanel.Dock="Left" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" Width="34" Height="34" Margin="0" Click="BtnBack_OnClick">
-                        <Image Source="Back.png" Width="32" Height="32"/>
+                        <Image Source="Back.ico" Width="32" Height="32"/>
                     </Button>
                     <TextBlock Name="TbDocumentTitle" HorizontalAlignment="Center" Margin="0,5,0,5" FontSize="18" Text=""></TextBlock>
                 </DockPanel>
@@ -418,7 +428,7 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Border BorderBrush="DarkCyan" Grid.Column="0" BorderThickness="2" Margin="20,10,20,10">
-                            <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=BestMatch.Antenna.ImagePath}" Width="280" Height="210" MouseDown="QueryResult_OnMouseDown"></Image>
+                            <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=BestMatch.Antenna.ImagePath, Converter={StaticResource ImageConverter}}" Width="280" Height="210" MouseDown="QueryResult_OnMouseDown"></Image>
                         </Border>
                         <Grid Grid.Column="1" Margin="20">
                             <Grid.RowDefinitions>
@@ -468,7 +478,7 @@
                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
                                         <Border BorderBrush="DarkCyan" Grid.Column="0" BorderThickness="2" Margin="20,10,20,10">
-                                            <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=Antenna.ImagePath}" Width="240" Height="180" MouseDown="QueryResult_OnMouseDown"></Image>
+                                            <Image Style="{StaticResource ClickableImage}" Source="{Binding Path=Antenna.ImagePath, Converter={StaticResource ImageConverter}}" Width="240" Height="180" MouseDown="QueryResult_OnMouseDown"></Image>
                                         </Border>
                                         <Grid Grid.Column="1" Margin="20">
                                             <Grid.RowDefinitions>
@@ -509,24 +519,26 @@
         <Border Grid.Column="1" Grid.Row="1" Name="DimensionsPanel" BorderBrush="DarkGray" Style="{StaticResource FadeIn}" BorderThickness="1" Margin="5,0,0,0" Visibility="Collapsed">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical">
-                    <DockPanel Grid.Row="0">
+                    <DockPanel>
                         <Button Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" Width="34" Height="34" Margin="0" Click="BtnBack_OnClick">
-                            <Image Source="Back.png" Width="32" Height="32"/>
+                            <Image Source="Back.ico" Width="32" Height="32"/>
                         </Button>
                         <TextBlock HorizontalAlignment="Center" Margin="0,5,0,5" FontSize="18" Text="{Binding Path=Antenna.Name}"></TextBlock>
                     </DockPanel>
-                    <Image MaxWidth="480" Margin="8" Source="{Binding Path=Antenna.DimensionsImagePath}"></Image>
+                    <Image MaxWidth="480" Margin="8" Source="{Binding Path=Antenna.DimensionsImagePath, Converter={StaticResource ImageConverter}}"></Image>
                     <Grid Width="480" Margin="0,8,0,8">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200"></ColumnDefinition>
-                            <ColumnDefinition Width="200"></ColumnDefinition>
+                            <ColumnDefinition Width="140"></ColumnDefinition>
+                            <ColumnDefinition Width="140"></ColumnDefinition>
+                            <ColumnDefinition Width="140"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Dimension" FontWeight="Bold" FontSize="14"></TextBlock>
                         <TextBlock Grid.Column="1" Text="Standard" FontWeight="Bold" FontSize="14"></TextBlock>
                         <TextBlock Grid.Column="2" Text="Custom" FontWeight="Bold" FontSize="14"></TextBlock>
+                        <TextBlock Grid.Column="3" Text="Unit" FontWeight="Bold" FontSize="14"></TextBlock>
                     </Grid>
-                    <ItemsControl ItemsSource="{Binding Path=Antenna.Dimensions}">
+                    <ItemsControl ItemsSource="{Binding Path=Dimensions.Map}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Vertical"></StackPanel>
@@ -536,20 +548,22 @@
                             <DataTemplate>
                                 <Grid Width="480">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="200"></ColumnDefinition>
-                                        <ColumnDefinition Width="200"></ColumnDefinition>
+                                        <ColumnDefinition Width="140"></ColumnDefinition>
+                                        <ColumnDefinition Width="140"></ColumnDefinition>
+                                        <ColumnDefinition Width="140"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{Binding Key}"></TextBlock>
-                                    <TextBlock Grid.Column="1" Text="{Binding Value}"></TextBlock>
+                                    <TextBlock Grid.Column="1" Text="{Binding Path=Value.Item1}"></TextBlock>
                                     <TextBlock Grid.Column="2">
                                         <TextBlock.Text>
                                             <MultiBinding Converter="{StaticResource DimensionScaleConverter}">
-                                                <Binding Path="Value"></Binding>
+                                                <Binding Path="Value.Item1"></Binding>
                                                 <Binding Path="DataContext.Scale" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}"></Binding>
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
+                                    <TextBlock Grid.Column="3" Text="{Binding Path=Value.Item2}"></TextBlock>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
