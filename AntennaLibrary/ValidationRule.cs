@@ -103,4 +103,20 @@ namespace AntennaLibrary
             return new ValidationResult(true, null);
         }
     }
+
+    public class AxialRatioValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            if (!string.IsNullOrEmpty(value as string))
+            {
+                double axialRatio;
+                if (!double.TryParse((string)value, out axialRatio) || axialRatio >= 0)
+                {
+                    return new ValidationResult(false, "Axial Ratio must be greater than 1");
+                }
+            }
+            return new ValidationResult(true, null);
+        }
+    }
 }

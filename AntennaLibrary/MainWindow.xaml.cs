@@ -208,7 +208,7 @@ namespace AntennaLibrary
 
         private void BtnFind_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!Validation.GetHasError(TbNumOfBands) && !Validation.GetHasError(TbGain) && !Validation.GetHasError(Tb3dBWidth) && !Validation.GetHasError(TbVSWR) && !Validation.GetHasError(TBEfficiency) && !Validation.GetHasError(TbCrossPolarization))
+            if (!Validation.GetHasError(TbNumOfBands) && !Validation.GetHasError(TbGain) && !Validation.GetHasError(Tb3dBWidth) && !Validation.GetHasError(TbVSWR) && !Validation.GetHasError(TBEfficiency) && !Validation.GetHasError(TbAxialRatio) && !Validation.GetHasError(TbCrossPolarization))
             {
                 ShowPanel(Panel.QueryResult);
 
@@ -218,6 +218,7 @@ namespace AntennaLibrary
                 query._3dBWidth = QueryViewModel._3dBWidth;
                 query.VSWR = QueryViewModel.VSWR;
                 query.Efficiency = QueryViewModel.Efficiency;
+                query.AxialRatio = QueryViewModel.AxialRatio;
                 query.CrossPolarization = QueryViewModel.CrossPolarization;
                 if (RbSingle.IsChecked != null && RbSingle.IsChecked.Value)
                 {

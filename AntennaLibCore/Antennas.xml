@@ -42,6 +42,13 @@
 				<FilePath>Antennas\Cassegrain\VSWR_35GHz.csv</FilePath>
 			</VSWRMap>
 		</VSWRMaps>
+		<AxialRatioMaps>
+			<AxialRatioMap>
+				<Freq>35</Freq>
+				<FreqUnit>GHz</FreqUnit>
+				<FilePath>Antennas\Cassegrain\Axial_Ratio.csv</FilePath>
+			</AxialRatioMap>
+		</AxialRatioMaps>
 		<DimensionMaps>
 			<DimensionMap>
 				<Freq>10</Freq>

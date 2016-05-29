@@ -81,26 +81,35 @@ namespace AntennaLibrary
             }
         }
 
-        private double? _Efficiency;
+        private double? _efficiency;
         public double? Efficiency
         {
-            get { return _Efficiency; }
+            get { return _efficiency; }
             set
             {
-                _Efficiency = value;
+                _efficiency = value;
                 OnPropertyChanged();
             }
         }
 
-        public double? AxialRatio;
-
-        private double? _CrossPolarization;
-        public double? CrossPolarization
+        private double? _axialRatio;
+        public double? AxialRatio
         {
-            get { return _CrossPolarization; }
+            get { return _axialRatio; }
             set
             {
-                _CrossPolarization = value;
+                _axialRatio = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double? _crossPolarization;
+        public double? CrossPolarization
+        {
+            get { return _crossPolarization; }
+            set
+            {
+                _crossPolarization = value;
                 OnPropertyChanged();
             }
         }

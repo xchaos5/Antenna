@@ -319,7 +319,13 @@
                             <RadioButton Grid.Row="6" Grid.Column="0" Margin="30,10,0,10" x:Name="RbLinear" GroupName="LinearCircular" IsChecked="True">Linear</RadioButton>
                             <RadioButton Grid.Row="6" Grid.Column="1" Margin="0,10,0,10" x:Name="RbCircular" GroupName="LinearCircular">Circular</RadioButton>
                             <Label Grid.Row="7" Grid.Column="0" Margin="30,10,0,10" Visibility="{Binding ElementName=RbCircular, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">Axial Ratio</Label>
-                            <TextBox Grid.Row="7" Grid.Column="1" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left" Visibility="{Binding ElementName=RbCircular, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}"></TextBox>
+                            <TextBox Grid.Row="7" Grid.Column="1" Name="TbAxialRatio" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left" Visibility="{Binding ElementName=RbCircular, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Binding Path="QueryViewModel.AxialRatio" Mode="TwoWay" UpdateSourceTrigger="Default" TargetNullValue="">
+                                    <Binding.ValidationRules>
+                                        <local:AxialRatioValidationRule></local:AxialRatioValidationRule>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox>
                             <Label Grid.Row="8" Grid.Column="0" Margin="0,10,0,10" Name="LblCross">Cross Polarization</Label>
                             <TextBox Grid.Row="8" Grid.Column="1" Name="TbCrossPolarization" Width="75" Height="20" Margin="0,10,0,10" HorizontalAlignment="Left">
                                 <TextBox.Text>

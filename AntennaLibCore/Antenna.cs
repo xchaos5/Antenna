@@ -238,11 +238,13 @@ namespace AntennaLibCore
 
         public IList<ThetaValueMap> ThetaGainMaps { get; set; }
 
-        public IList<ThetaValueMap> CrossPolarizationMaps { get; set; }
-
         public IList<FreqValueMap> FreqGainMaps { get; set; }
 
         public IList<FreqValueMap> VSWRMaps { get; set; }
+
+        public IList<FreqValueMap> AxialRatioMaps { get; set; } 
+
+        public IList<ThetaValueMap> CrossPolarizationMaps { get; set; }
 
         public IList<DimensionMap> DimensionMaps { get; set; }
 
@@ -365,6 +367,25 @@ namespace AntennaLibCore
                 if (query.VSWR != null && vswrMap != null && vswrMap.GetValueByFreq(querybandRange.F0_Normalized) > query.VSWR.Value * 1.1)
                 {
                     return result;
+                }
+
+                if (query.AxialRatio != null)
+                {
+                    var arMap = GetClosestFreqValueMap(AxialRatioMaps, querybandRange.F0_Normalized);
+                    if (arMap != null)
+                    {
+                        if (arMap.GetValueByFreq(querybandRange.F0_Normalized) < query.AxialRatio.Value)
+                        {
+                            return result;
+                        }
+
+                        // Marginal gain
+                        if (arMap.GetValueByFreq(querybandRange.LowerBound.NormalizedFreq) < query.AxialRatio.Value || arMap.GetValueByFreq(querybandRange.UpperBound.NormalizedFreq) < query.AxialRatio.Value)
+                        {
+                            result.IsMarginMatch = false;
+                            return result;
+                        }
+                    }
                 }
 
                 // Cross Polarization
